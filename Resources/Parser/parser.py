@@ -4,14 +4,39 @@ from Resources.Utils.log import Logger
 OPERATORS = "+|^"
 logger = Logger("Parser")
 
+OPERATORS = ['!', '+', '|', '^', '(', ')']
+PRIORITY = {'^': 0, '|': 1, '+': 2, '!': 3}
+
 
 class Rule:
 	def __init__(self, line, splited_line):
-		self.condition = splited_line[0]
-		print(self.condition)
-		self.implication = "<=>" if "<=>" in line else "=>"
-		self.result = splited_line[1]
+		if line.count("(") != line.count(")"):
+			logger.error("Mismatching parantheses")
 
+		self.condition = self.create_rule(splited_line[0])
+		self.implication = "<=>" if "<=>" in line else "=>"
+		self.result = self.create_rule(splited_line[1])
+
+	def create_rule(self, rule):
+		stack = []
+		output = ''
+		for value in rule:
+			if value not in OPERATORS:
+				output += value
+			elif value == '(':
+				stack.append('(')
+			elif value == ')':
+				while stack and stack[-1] != '(':
+					output += stack.pop()
+				stack.pop()
+			else:
+				while stack and stack[-1] != '(' and value != '!' and PRIORITY[value] <= PRIORITY[stack[-1]]:
+					output += stack.pop()
+				stack.append(value)
+		while stack:
+			output += stack.pop()
+		output = output.replace('!!', '')
+		return output
 
 	def __str__(self):
 		return f"Conditions : {self.condition:<10}\tImplication : {self.implication:<3}\tResult : {self.result}\n"
