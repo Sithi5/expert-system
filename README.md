@@ -1,19 +1,23 @@
-# Queries
+Letters = Dictionaire{<code>"Letter" : LetterNode</code>}
 
-| Name | Value|
-|---|---|
-|Letter |  |
+Connectors List(ConnectorNode)
 
-# Rules
-| Name | Value|
-|---|---|
-|Expression| String (RPN)|
-| Implication | String / Bool |
-| Result | String (RPN)|
+Implication = List(Implication)
 
-# Facts Node
+## LetterNode (Herite de Node)
 | Name | Value |
 |---|---|
-|True | Bool|
-|False| Bool|
-|Related Letter | Array |
+|Name | Nom de la Letter|
+
+
+## ConnectorNode (Herite de Node)
+| Name | Value |
+|---|---|
+|type | Type doperateur|
+|operand | LetterNode concernés|
+
+## ImplicationNode (Herite de Node)
+| Name | Value |
+|---|---|
+|left | ConnectorNode sinon LetterNode|
+|right |ConnectorNode sinon LetterNode|
