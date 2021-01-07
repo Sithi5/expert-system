@@ -21,3 +21,12 @@ Implication = List(Implication)
 |---|---|
 |left | ConnectorNode sinon LetterNode|
 |right |ConnectorNode sinon LetterNode|
+
+## TO DO LIST
+| TO DO        |   STATUS       |
+| ------------------ |:----:|
+| Parsing                |X| 
+| Tree Creation          |X| 
+| Backward chaining      |X| 
+| battery of tests       |X| 
+| Bonus                  |X| 
