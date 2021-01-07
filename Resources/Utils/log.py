@@ -1,4 +1,4 @@
-from Resources.Parser.args import ArgsParser
+VERBOSE = True
 
 BLACK = "\033[30m"
 RED = "\033[31m"
@@ -12,11 +12,12 @@ END = "\033[0m"
 
 
 class Logger:
-	def __init__(self, type):
+	def __init__(self, type, vb=False):
 		self.type = type
+		self.vb = vb
 
 	def info(self, message, type=None):
-		if ArgsParser.args.verbose:
+		if self.vb is True:
 			type = type or self.type
 			info = f"{YELLOW}<{type}>{END}"
 			print(f"{info:24} {message}")
