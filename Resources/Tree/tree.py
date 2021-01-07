@@ -2,7 +2,8 @@ from Resources.Utils.log import Logger
 from Resources.Tree.node import LetterNode, ConnectorNode
 
 OPERATORS = ["+", "^", "|", "=>", "<=>", "!"]
-LST_OP = {'+': "&", '|': "|", '^': '^'}
+LST_OP = {"+": "&", "|": "|", "^": "^"}
+
 
 class Tree:
 	def __init__(self, vb):
@@ -34,7 +35,7 @@ class Tree:
 	def set_letter_state(self, letter_name, value):
 		letter = self.letters.get(letter_name)
 		if letter is None:
-			logger.warning(f"No match found for letter '{letter_name}' in fact section")
+			self.logger.warning(f"No match found for letter '{letter_name}' in fact section")
 			return
 		letter.state = value
 		if value is True:
