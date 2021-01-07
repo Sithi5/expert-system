@@ -5,7 +5,7 @@ RED = "\033[31m"
 GREEN = "\033[32m"
 YELLOW = "\033[33m"
 BLUE = "\033[34m"
-PRUPLE = "\033[35m"
+PURPLE = "\033[35m"
 CYAN = "\033[36m"
 GREY = "\033[37m"
 END = "\033[0m"
@@ -16,12 +16,16 @@ class Logger:
 		self.type = type
 
 	def info(self, message, type=None):
-		# if ArgsParser.args.verbose:
+		if ArgsParser.args.verbose:
+			type = type or self.type
+			info = f"{YELLOW}<{type}>{END}"
+			print(f"{info:24} {message}")
+
+	def warning(self, message, type=None):
 		type = type or self.type
-		print(f"{YELLOW}<{type}>{END} {message}")
+		print(f"{PURPLE}<{type}> Warning: {END}{message}")
 
 	def error(self, message, type=None):
-		# if ArgsParser.args.verbose:
 		type = type or self.type
-		print(f"{RED}<{type}> Error: {END} {message}")
+		print(f"{RED}<{type}> Error: {END:6}{message}")
 		exit()
