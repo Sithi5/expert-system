@@ -2,16 +2,18 @@ import re
 from Resources.Utils.log import Logger
 
 OPERATORS = "+|^"
-logger = Logger("Parser")
+
 
 OPERATORS = ['!', '+', '|', '^', '(', ')']
 PRIORITY = {'^': 0, '|': 1, '+': 2, '!': 3}
 
 
 class Rule:
-	def __init__(self, line, splited_line):
+	def __init__(self, line, splited_line, vb):
+		self.vb = vb
+		self.logger = Logger("Parser.Rule", self.vb)
 		if line.count("(") != line.count(")"):
-			logger.error("Mismatching parantheses")
+			self.logger.error("Mismatching parantheses")
 		self.expression = self.create_rule(splited_line[0])
 		self.implication = "<=>" if "<=>" in line else "=>"
 		self.result = self.create_rule(splited_line[1])
@@ -45,17 +47,19 @@ class Rule:
 
 
 class Parser:
-	def __init__(self, file):
+	def __init__(self, file, vb):
+		self.vb = vb
+		self.logger = Logger("Parser.Parser", self.vb)
 		self.input = file.readlines()
 		self.facts = []
 		self.queries = []
 		self.rules = []
-		logger.info("Initialization of class")
+		self.logger.info("Initialization of class")
 		self.parsing()
 
 	def parsing(self):
 		rule_d = 0
-		logger.info("Starting parsing")
+		self.logger.info("Starting parsing")
 		for line in self.input:
 			line = line.split("#", 1)[0]
 			line = (''.join(line.split()))
@@ -67,37 +71,37 @@ class Parser:
 				self.queries_parsing(line[1:])
 			else:
 				if "=>" not in line and "<=>" not in line:
-					logger.error("Rule format incorrect")
+					self.logger.error("Rule format incorrect")
 				splited_line = re.split("=>|<=>", line)
-				rule = Rule(line, splited_line)
+				rule = Rule(line, splited_line, self.vb)
 				self.rules.append(rule)
 				if rule_d == 0:
-					logger.info("Rules detected")
+					self.logger.info("Rules detected")
 					rule_d = 1
 		if rule_d == 0:
-			logger.warning("No rules detected")
+			self.logger.warning("No rules detected")
 
 
 		if len(self.queries) == 0:
-			logger.error("No queries")
+			self.logger.error("No queries")
 		if len(self.facts) == 0:
-			logger.error("No facts")
-		logger.info("End of parsing")
+			self.logger.error("No facts")
+		self.logger.info("End of parsing")
 
 	def fact_parsing(self, line):
 		if len(self.facts) != 0:
-			logger.error("Facts already defined")
+			self.logger.error("Facts already defined")
 		if line.isalpha() and line.isupper():
 			self.facts = list(line)
-			logger.info(f"Facts detected : {self.facts}")
+			self.logger.info(f"Facts detected : {self.facts}")
 		else:
-			logger.error("Facts format incorrect")
+			self.logger.error("Facts format incorrect")
 
 	def queries_parsing(self, line):
 		if len(self.queries) != 0:
-			logger.error("Queries already defined")
+			self.logger.error("Queries already defined")
 		if line.isalpha() and line.isupper():
 			self.queries = list(line)
-			logger.info(f"Queries detected : {self.queries}")
+			self.logger.info(f"Queries detected : {self.queries}")
 		else:
-			logger.error("Queries format incorrect")
+			self.logger.error("Queries format incorrect")
