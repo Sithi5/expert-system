@@ -1,32 +1,8 @@
-Letters = Dictionaire{<code>"Letter" : LetterNode</code>}
-
-Connectors List(ConnectorNode)
-
-Implication = List(Implication)
-
-## LetterNode (Herite de Node)
-| Name | Value |
-|---|---|
-|Name | Nom de la Letter|
-
-
-## ConnectorNode (Herite de Node)
-| Name | Value |
-|---|---|
-|type | Type doperateur|
-|operand | LetterNode concernés|
-
-## ImplicationNode (Herite de Node)
-| Name | Value |
-|---|---|
-|left | ConnectorNode sinon LetterNode|
-|right |ConnectorNode sinon LetterNode|
-
 ## TO DO LIST
-| TO DO        |   STATUS       |
+| TO DO | STATUS|
 | ------------------ |:----:|
-| Parsing                |X| 
-| Tree Creation          |X| 
-| Backward chaining      |X| 
-| battery of tests       |X| 
-| Bonus                  |X| 
+| Parsing | &#9744;
+| Tree Creation | &#9744;
+| Backward chaining | &#9744;
+| battery of tests | &#9744;
+| Bonus | &#9744;
