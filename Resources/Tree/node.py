@@ -19,9 +19,9 @@ class LetterNode(Node):
 	def __str__(self):
 		return f"LetterNode({self.name})"
 
-class OperatorNode(Node):
+class ConnectorNode(Node):
 	def __init__(self, op_type, tree):
-		super(OperatorNode, self).__init__(tree)
+		super(ConnectorNode, self).__init__(tree)
 		self.type = op_type
 		self.operands = []
 		self.state = None

@@ -1,10 +1,9 @@
 from Resources.Utils.log import Logger
-from Resources.Tree.node import LetterNode, OperatorNode
+from Resources.Tree.node import LetterNode, ConnectorNode
 
 OPERATORS = ["+", "^", "|", "=>", "<=>", "!"]
 LST_OP = {'+': "&", '|': "|", '^': '^'}
 logger = Logger("Tree")
-
 
 class Tree:
 	def __init__(self):
@@ -12,7 +11,7 @@ class Tree:
 		self.letters = {}
 		self.connectors = []
 		self.rules = []
-		self.root_node = OperatorNode("+", self)
+		self.root_node = ConnectorNode("+", self)
 		self.root_node.is_root = True
 
 	def get_all_letters(self, rules):
