@@ -105,3 +105,27 @@ class Parser:
 			self.logger.info(f"Queries detected : {self.queries}")
 		else:
 			self.logger.error("Queries format incorrect")
+
+	def convert_rules(self):
+		for rule in self.rules:
+			nb = 0
+			rule_let = []
+			new_rule = []
+			for l in rule.result:
+				if l.isalpha() and l.isupper():
+					rule_let.append(l)
+					nb += 1
+			if nb != 1:
+				print(rule)
+			for l in rule_let:
+				other_let = []
+				for x in rule_let:
+					if x != l:
+						other_let.append(x)
+				if len(other_let) > 0:
+					print(rule.expression + '!'+ str(other_let[0]), end = " => ")
+					#new_rule.append(rule.expression)
+					print(l)
+			
+			
+		

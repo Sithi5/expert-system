@@ -1,15 +1,15 @@
 (A + C) + C => B
 C => A
 B + (C | A) => G
-
 A + C => B | G
+
 ##Affirmation upward can be convert to A + C + ! B => G
 ##A + C + ! G => B with set of B and G to unknow if both False at first read of the affirmation
 
 =C
 ?B
 
-C is True
+#C is True
 ####################-TREE B-#################
 #                                           #
 #                     Node B                #
@@ -53,11 +53,11 @@ C is True
 #############################################
 
 
-B and G is set to unknow
+#B and G is set to unknow
 
-new tree B :
-                                                 node C
-                                                   |
+#new tree B :
+                    #                             node C
+                     #                              |
 ####################-TREE B-#################    node+ ---- node A
 #                                                  |
 #                     Node B --------------------node+ ---- !node G
@@ -75,7 +75,7 @@ new tree B :
 #
 #############################################
 
-new tree G :
+#new tree G :
 ####################-TREE G-#################
 #                                                node C
 #                                                  |
@@ -96,12 +96,32 @@ new tree G :
 
 
 
-Resolving :
+#Resolving :
 
-?B =
+#?B =
 
-B is unknow
+#B is unknow
 
-C + A + !G ou C + (C | A) == True and True and !unknow ou True and (True | True)
-True and True and !unknow = unknow
-True and (True | True) == True and True == True
+#C + A + !G ou C + (C | A) == True and True and !unknow ou True and (True | True)
+#True and True and !unknow = unknow
+#True and (True | True) == True and True == True
+
+#+
+#A + B => C + D
+     # =
+#A + B => C
+#A + B => D
+
+#|
+#A + B => C | D
+     # =
+#A + B + ! C => D
+#A + B + ! D => C
+
+#^
+#A + B => C ^ D
+    #  =
+#A + B + ! C => D
+#A + B + ! D => C
+#A + B + C => !D
+#A + B + D => ! C

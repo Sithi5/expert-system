@@ -51,3 +51,7 @@ class Tree:
 		for fact in facts:
 			self.set_letter_state(fact, True)
 		self.logger.info("End")
+
+	def create_connector_node(self, rules):
+		self.logger.info("create connector node")
+		

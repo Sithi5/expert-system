@@ -7,6 +7,11 @@ def main(file, vb):
 	tree = Tree(vb)
 	tree.create_all_letternode(parser.rules)
 	tree.set_letters_state(parser.rules, parser.facts)
+	parser.convert_rules()
+	# print(tree.letters)
+	# print(tree.connectors)
+	# print(tree.rules)
+	# print(parser.rules)
 	result = "Nothing"
 	return result
 
