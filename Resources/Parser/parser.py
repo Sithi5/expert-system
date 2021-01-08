@@ -107,25 +107,45 @@ class Parser:
 			self.logger.error("Queries format incorrect")
 
 	def convert_rules(self):
-		for rule in self.rules:
-			nb = 0
+		print(self.rules)
+		for idx, rule in enumerate(self.rules, start=0):
+			result = rule.result
+			count_xor_or_operator = result.count("|") + result.count("^")
+			if count_xor_or_operator == 0:
+				continue
+			elif count_xor_or_operator > 1:
+				raise ValueError("Only one 'XOR' or 'OR' operator are allowed in result.")
+
 			rule_let = []
-			new_rule = []
-			for l in rule.result:
+			nb = 0
+			op = []
+			for l in result:
 				if l.isalpha() and l.isupper():
 					rule_let.append(l)
 					nb += 1
+				else:
+					op.append(l)
+			if nb > 2:
+				raise ValueError(
+					"Only two letters can be set in result when using 'XOR' or 'OR' operator"
+				)
 			if nb != 1:
 				print(rule)
-			for l in rule_let:
-				other_let = []
-				for x in rule_let:
-					if x != l:
-						other_let.append(x)
-				if len(other_let) > 0:
-					print(rule.expression + '!'+ str(other_let[0]), end = " => ")
-					#new_rule.append(rule.expression)
-					print(l)
-			
-			
-		
+				for l in rule_let:
+					other_let = []
+					for x in rule_let:
+						if x != l:
+							other_let.append(x)
+					if len(other_let) > 0:
+						line = rule.expression + '!'+ str(other_let[0]) + " => " + l
+						splited = line.split()
+						print(line)
+						splited.pop(1)
+						print(splited)
+						self.rules.append(Rule(line,splited,"vb"))
+				self.rules.pop(idx)
+
+		print("##RULES##")
+		print(self.rules)
+		print("########")
+
