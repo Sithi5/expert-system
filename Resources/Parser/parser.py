@@ -112,8 +112,39 @@ class Parser:
         else:
             self.logger.error("Queries format incorrect")
 
+    def convert_rules_or_xor(self, rule, idx: int):
+        result = rule.result
+        rule_let = []
+        nb = 0
+        op = []
+        for l in result:
+            if l.isalpha() and l.isupper():
+                rule_let.append(l)
+                nb += 1
+            else:
+                op.append(l)
+        if nb > 2:
+            raise InputError(
+                "Only two letters can be set in result when using 'XOR' or 'OR' operator"
+            )
+        if nb != 1:
+            print(rule)
+            for l in rule_let:
+                other_let = []
+                for x in rule_let:
+                    if x != l:
+                        other_let.append(x)
+                if len(other_let) > 0:
+                    line = rule.expression + "!" + str(other_let[0]) + " => " + l
+                    splited = line.split()
+                    print(line)
+                    splited.pop(1)
+                    print(splited)
+                    self.rules.append(Rule(line, splited, "vb"))
+            self.rules.pop(idx)
+
     def convert_rules(self):
-        print(self.rules)
+        print("\nRules = ", self.rules)
         for idx, rule in enumerate(self.rules, start=0):
             result = rule.result
             count_xor_or_operator = result.count("|") + result.count("^")
@@ -123,36 +154,9 @@ class Parser:
                 continue
             elif count_xor_or_operator > 1:
                 raise InputError("Only one 'XOR' or 'OR' operator are allowed in result.")
-
-            rule_let = []
-            nb = 0
-            op = []
-            for l in result:
-                if l.isalpha() and l.isupper():
-                    rule_let.append(l)
-                    nb += 1
-                else:
-                    op.append(l)
-            if nb > 2:
-                raise InputError(
-                    "Only two letters can be set in result when using 'XOR' or 'OR' operator"
-                )
-            if nb != 1:
-                print(rule)
-                for l in rule_let:
-                    other_let = []
-                    for x in rule_let:
-                        if x != l:
-                            other_let.append(x)
-                    if len(other_let) > 0:
-                        line = rule.expression + "!" + str(other_let[0]) + " => " + l
-                        splited = line.split()
-                        print(line)
-                        splited.pop(1)
-                        print(splited)
-                        self.rules.append(Rule(line, splited, "vb"))
-                self.rules.pop(idx)
-
+            # Convert XOR or OR rule
+            else:
+                self.convert_rules_or_xor(idx=idx, rule=rule)
         print("##RULES##")
         print(self.rules)
         print("########")

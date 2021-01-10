@@ -117,11 +117,24 @@ A + C => B | G
      # =
 #A + B + ! C => D
 #A + B + ! D => C
+#If one is false, set to unknow
 
 #^
 #A + B => C ^ D
     #  =
 #A + B + ! C => D
 #A + B + ! D => C
-#A + B + C => !D
-#A + B + D => ! C
+#If no one is true, set to unknow
+
+
+#| with !
+#A + B => C | !D
+     # =
+#A + B + D => C
+#If one is false, set to unknow
+
+#^ with !
+#A + B => C ^ !D
+    #  =
+#A + B + D => C
+#If no one is true, set to unknow
