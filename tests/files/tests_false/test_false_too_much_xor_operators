@@ -1,5 +1,5 @@
 A => B
-B => G | E ^ F
+B => G ^ E ^ Y
 
 =A
 ?B
