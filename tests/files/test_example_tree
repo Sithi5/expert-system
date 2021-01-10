@@ -138,3 +138,14 @@ A + C => B | G
     #  =
 #A + B + D => C
 #If no one is true, set to unknow
+
+
+               node C --|-- node D
+                        |
+                  node '|'                  
+                        |                   
+                   node =>                 
+                        |                   
+                    node +                  
+                        |                   
+          node A -------|------- node B           
