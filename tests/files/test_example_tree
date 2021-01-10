@@ -142,12 +142,31 @@ A + C => B | G
 
           ### A + B => C | D ###
 
-               node C --|-- node D
-                        |
-                  node '|'                  
-                        |                   
-                   node =>                 
-                        |                   
-                    node +                  
-                        |                   
-          node A -------|------- node B           
+#              node C      node D
+#                    \   /
+#                     \ /
+#                node '|'                  
+#                      |                   
+#                  node =>                 
+#                      |                   
+#                   node +                  
+#                     / \
+#                    /   \
+#               node A    node B           
+
+          ### A + B => C | D | E ###
+#
+#           node C  node D
+#               \   /
+#                \ /
+#                node '|'   node E
+#                    \   /
+#                     \ /
+#                node '|'                  
+#                      |                   
+#                  node =>                 
+#                      |                   
+#                   node +                  
+#                     / \
+#                    /   \
+#               node A    node B  
