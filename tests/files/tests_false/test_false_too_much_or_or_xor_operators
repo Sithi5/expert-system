@@ -1,0 +1,10 @@
+(A + C) + C => B
+C => A
+B + (C | A) => G | E|F|Y
+A + C => B | G
+
+##Affirmation upward can be convert to A + C + ! B => G
+##A + C + ! G => B with set of B and G to unknow if both False at first read of the affirmation
+
+=C
+?B

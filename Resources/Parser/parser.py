@@ -1,5 +1,7 @@
 import re
+
 from Resources.Utils.log import Logger
+from Resources.Parser.exceptions import InputError
 
 OPERATORS = "+|^"
 
@@ -115,10 +117,12 @@ class Parser:
         for idx, rule in enumerate(self.rules, start=0):
             result = rule.result
             count_xor_or_operator = result.count("|") + result.count("^")
+            # In that case it should be only + operator
             if count_xor_or_operator == 0:
+                # TODO : The function for multiple + operator
                 continue
             elif count_xor_or_operator > 1:
-                raise ValueError("Only one 'XOR' or 'OR' operator are allowed in result.")
+                raise InputError("Only one 'XOR' or 'OR' operator are allowed in result.")
 
             rule_let = []
             nb = 0
@@ -130,7 +134,7 @@ class Parser:
                 else:
                     op.append(l)
             if nb > 2:
-                raise ValueError(
+                raise InputError(
                     "Only two letters can be set in result when using 'XOR' or 'OR' operator"
                 )
             if nb != 1:
