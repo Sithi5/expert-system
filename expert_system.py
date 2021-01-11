@@ -10,6 +10,12 @@ def main(file, vb):
 	tree.set_letters_state(parser.rules, parser.facts)
 	tree.rules = parser.rules
 	tree.create_rules_tree()
+	###
+	print("\n")
+	tree.travel_graph_for_letter(tree.letters['G'],tree.letters['G'])
+	print("\n")
+	tree.print_way(tree.letters['G'])
+	###
 	result = "Nothing"
 	return result
 

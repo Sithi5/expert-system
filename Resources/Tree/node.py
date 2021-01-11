@@ -1,4 +1,5 @@
 class Node:
+	way = []
 	def __init__(self, tree):
 		self.children = []
 		self.operand_parents = []
@@ -6,6 +7,7 @@ class Node:
 		self.state = False
 		self.state_fixed = False
 		self.tree = tree
+
 
 
 class LetterNode(Node):
