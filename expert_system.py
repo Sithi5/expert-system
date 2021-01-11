@@ -5,6 +5,7 @@ from Resources.Tree.tree import Tree
 def main(file, vb):
 	try :
 		parser = Parser(file, vb)
+		parser.parsing()
 		tree = Tree(vb)
 		tree.create_all_letternode(parser.rules)
 		tree.set_letters_state(parser.rules, parser.facts)
