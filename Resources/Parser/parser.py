@@ -62,7 +62,6 @@ class Parser:
 		self.queries = []
 		self.rules = []
 		self.logger.info("Initialization of class")
-		self.parsing()
 
 	def parsing(self):
 		rules_set = 0
