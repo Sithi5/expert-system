@@ -112,14 +112,3 @@ class Parser:
 		else:
 			self.logger.error("Queries format incorrect")
 
-	def Parse_rules_to_list(self,tree):
-		table_rules = []
-		for rule in self.rules:
-			table = []
-			for l in rule.expression:
-				table.append(l)
-			table.append(rule.implication)
-			for l in rule.result:
-				table.append(l)
-			table_rules.append(table)
-		print(table_rules)

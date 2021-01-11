@@ -9,8 +9,7 @@ def main(file, vb):
 	tree.create_all_letternode(parser.rules)
 	tree.set_letters_state(parser.rules, parser.facts)
 	tree.rules = parser.rules
-	parser.Parse_rules_to_list(tree)
-	print("tree rules = ", tree.rules)
+	tree.create_rules_tree()
 	result = "Nothing"
 	return result
 

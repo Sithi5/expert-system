@@ -1,4 +1,4 @@
-(A + C) + C => B
+(A + C) + C => A
 C => A
 B + (C | A) => G
 A + C => B | G
@@ -159,14 +159,14 @@ A + C => B | G
 #           node C  node D
 #               \   /
 #                \ /
-#                node '|'   node E
+#                node '?'   node E
 #                    \   /
 #                     \ /
-#                node '|'                  
+#                node '?'                  
 #                      |                   
 #                  node =>                 
 #                      |                   
-#                   node +                  
+#                   node ?                  
 #                     / \
 #                    /   \
 #               node A    node B  
