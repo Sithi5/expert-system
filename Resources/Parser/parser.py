@@ -6,21 +6,28 @@ OPERATORS = "+|^"
 
 OPERATORS = ['!', '+', '|', '^', '(', ')']
 PRIORITY = {'^': 0, '|': 1, '+': 2, '!': 3}
-
+REGEX = re.compile(r"(^((\()*(!){0,2})*[A-Z](\))*(([+|^]((\()*(!){0,2})*[A-Z](\))*)*)?$)")
 
 class Rule:
-	def __init__(self, line, splited_line, vb):
+	def __init__(self, line, splited_line, it, vb):
 		self.vb = vb
 		self.logger = Logger("Parser.Rule", self.vb)
-		if line.count("(") != line.count(")"):
-			self.logger.error("Mismatching parantheses")
-		self.expression = self.create_rule(splited_line[0])
+		self.line_nb = it
 		self.implication = "<=>" if "<=>" in line else "=>"
-		self.result = self.create_rule(splited_line[1])
+		self.expression = self.check_rule(splited_line[0])
+		self.result = self.check_rule(splited_line[1])
+
+
+	def check_rule(self, string):
+		if string.count("(") != string.count(")"):
+			self.logger.error("Mismatching parantheses in rule")
+		if REGEX.match(string) is None:
+			self.logger.error(f'Rule format is incorrect at line {self.line_nb + 1}')
+		return self.create_rule(string)
 
 	def create_rule(self, rule):
 		stack = []
-		output = ''
+		output = '' 
 		for value in rule:
 			if value not in OPERATORS:
 				output += value
@@ -58,50 +65,56 @@ class Parser:
 		self.parsing()
 
 	def parsing(self):
-		rule_d = 0
+		rules_set = 0
+		facts_set = 0
+		queries_set = 0
 		self.logger.info("Starting parsing")
-		for line in self.input:
+		for it,line in enumerate(self.input):
 			line = line.split("#", 1)[0]
 			line = (''.join(line.split()))
 			if not line:
 				continue
 			if line[0] == "=":
-				self.fact_parsing(line[1:])
+				self.fact_parsing(line[1:], facts_set)
+				facts_set = 1
 			elif line[0] == "?":
-				self.queries_parsing(line[1:])
+				self.queries_parsing(line[1:], queries_set)
+				queries_set = 1
 			else:
 				if "=>" not in line and "<=>" not in line:
-					self.logger.error("Rule format incorrect")
+					self.logger.error("Rule implication incorrect")
 				splited_line = re.split("=>|<=>", line)
-				rule = Rule(line, splited_line, self.vb)
+				rule = Rule(line, splited_line, it, self.vb)
 				self.rules.append(rule)
-				if rule_d == 0:
+				if rules_set == 0:
 					self.logger.info("Rules detected")
-					rule_d = 1
-		if rule_d == 0:
+					rules_set = 1
+		if rules_set == 0:
 			self.logger.warning("No rules detected")
-
-
-		if len(self.queries) == 0:
+		if queries_set == 0:
 			self.logger.error("No queries")
-		if len(self.facts) == 0:
+		if facts_set == 0:
 			self.logger.error("No facts")
 		self.logger.info("End of parsing")
 
-	def fact_parsing(self, line):
-		if len(self.facts) != 0:
+	def fact_parsing(self, line, facts_set):
+		if facts_set != 0:
 			self.logger.error("Facts already defined")
-		if line.isalpha() and line.isupper():
+		if len(line) > 0 and line.isalpha() and line.isupper():
 			self.facts = list(line)
+			self.logger.info(f"Facts detected : {self.facts}")
+		elif len(line) == 0:
+			self.facts = []
 			self.logger.info(f"Facts detected : {self.facts}")
 		else:
 			self.logger.error("Facts format incorrect")
 
-	def queries_parsing(self, line):
-		if len(self.queries) != 0:
+	def queries_parsing(self, line, queries_set):
+		if queries_set != 0:
 			self.logger.error("Queries already defined")
 		if line.isalpha() and line.isupper():
 			self.queries = list(line)
 			self.logger.info(f"Queries detected : {self.queries}")
 		else:
 			self.logger.error("Queries format incorrect")
+

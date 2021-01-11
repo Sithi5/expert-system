@@ -29,4 +29,4 @@ class Logger:
 	def error(self, message, type=None):
 		type = type or self.type
 		print(f"{RED}<{type}> Error: {END:6}{message}")
-		exit()
+		raise Exception("logger", message)

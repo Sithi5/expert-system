@@ -3,12 +3,15 @@ from Resources.Parser.parser import Parser
 from Resources.Tree.tree import Tree
 
 def main(file, vb):
-	parser = Parser(file, vb)
-	tree = Tree(vb)
-	tree.create_all_letternode(parser.rules)
-	tree.set_letters_state(parser.rules, parser.facts)
-	result = "Nothing"
-	return result
+	try :
+		parser = Parser(file, vb)
+		tree = Tree(vb)
+		tree.create_all_letternode(parser.rules)
+		tree.set_letters_state(parser.rules, parser.facts)
+		result = "Nothing"
+		return result
+	except Exception as error:
+		return "Error :" + error.args[1]
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description="Expert System")
