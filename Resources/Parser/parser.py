@@ -57,7 +57,7 @@ class Parser:
 	def __init__(self, file, vb):
 		self.vb = vb
 		self.logger = Logger("Parser.Parser", self.vb)
-		self.input = file.readlines()
+		self.input = file
 		self.facts = []
 		self.queries = []
 		self.rules = []
