@@ -1,5 +1,6 @@
 from Resources.Utils.log import Logger
 from Resources.Tree.node import LetterNode, ConnectorNode, Node
+from Resources.Tree.tree_printer import TreePrinter
 
 OPERATORS = ["+", "^", "|", "=>", "<=>", "!"]
 LST_OP = {"+": "&", "|": "|", "^": "^"}
@@ -12,6 +13,7 @@ class Tree:
         self.vb = vb
         self.logger = Logger("Tree", self.vb)
         self.logger.info("Initialization of class", vb)
+        self.tree_printer = TreePrinter()
         self.letters = {}
         self.connectors = []
         self.root_node = None
@@ -89,53 +91,6 @@ class Tree:
             self.root_node = node
             self.root_node.children = None
 
-    def print_tree(self):
-        root = node
-        print("Printing the tree : ")
-        while root:
-            if isinstance(root, ConnectorNode):
-                print(root.type, end=" ")
-            elif isinstance(root, LetterNode):
-                print(root.name, end="-->")
-            root = root.children
-
-    def print_node(self, node):
-        if isinstance(node, ConnectorNode):
-            print(node.type, end=" ")
-        elif isinstance(node, LetterNode):
-            print(node.name, end=" ")
-
-    def print_all_parent_from_node(self, node):
-        self.print_node(node)
-        self.print_all_result_parents_from_node(node=node, print_node=False)
-        self.print_all_expression_parents_from_node(node=node, print_node=False)
-
-    def print_all_result_parents_from_node(self, node, print_node=True):
-        if print_node is True:
-            self.print_node(node)
-        for parent in node.result_parents:
-            self.print_all_result_parents_from_node(node=parent, print_node=True)
-
-    def print_all_expression_parents_from_node(self, node, print_node=True):
-        if print_node is True:
-            self.print_node(node)
-        for parent in node.expression_parents:
-            self.print_all_expression_parents_from_node(node=parent, print_node=True)
-
-    def print_all_children_from_node(self, node: Node, depth=0):
-        print(depth, end="")
-        self.print_node(node)
-        for children in node.children:
-            self.print_all_children_from_node(node=children, depth=depth + 1)
-
-    def print_tree_from_implication(self, implication_node):
-        print("\nIMPLICATION TREE :")
-        children_one = implication_node.children[0]
-        children_two = implication_node.children[1]
-        self.print_all_children_from_node(children_one)
-        self.print_node(implication_node)
-        self.print_all_children_from_node(children_two)
-
     def create_child_tree(self, rule, implication_node, rules_implied_in, is_result=False):
         stack = []
         for c in rule:
@@ -186,7 +141,7 @@ class Tree:
             self.create_child_tree(
                 rule[2], implication_node=implication_node, rules_implied_in=rule, is_result=True
             )
-            # self.print_tree_from_implication(implication_node=implication_node)
+            self.tree_printer.print_tree_from_implication(implication_node=implication_node)
 
     def travel_graph_for_letter(self, letter, node):
         # if type(node) == ConnectorNode: // Does this mean anything
