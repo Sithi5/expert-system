@@ -1,9 +1,15 @@
 import argparse
 import re
+
 from Resources.Utils.log import Logger
 from Resources.Parser.parser import Parser, Rule
 from Resources.Tree.tree import Tree
 from Resources.Shell.shell import Shell
+from Resources.Tree.print_tree import (
+    print_node,
+    print_all_expression_parents_from_node,
+    print_all_result_parents_from_node,
+)
 
 
 def parsing_shell(vb):
@@ -66,5 +72,10 @@ if __name__ == "__main__":
     tree.set_letters_state(parser.rules, parser.facts)
     tree.rules = parser.rules
     tree.create_rules_tree()
-    print("\n\n\n\nprint tree A")
-    tree.print_all_parent_from_node(tree.letters["A"])
+    print("\nTesting print rules for A: ")
+    for idx, rule in enumerate(tree.letters["A"].rules_implied_in):
+        print("rule number ", idx, " :", rule)
+    print("\nTesting print result parent for letter A : ")
+    print_all_result_parents_from_node(tree.letters["A"])
+    print("\nTesting print expression parent for letter A : ")
+    print_all_expression_parents_from_node(tree.letters["A"])

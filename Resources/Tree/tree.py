@@ -107,12 +107,23 @@ class Tree:
 
     def print_all_parent_from_node(self, node):
         self.print_node(node)
-        for parent in node.operand_parents:
-            self.print_all_parent_from_node(parent)
+        self.print_all_result_parents_from_node(node=node, print_node=False)
+        self.print_all_expression_parents_from_node(node=node, print_node=False)
+
+    def print_all_result_parents_from_node(self, node, print_node=True):
+        if print_node is True:
+            self.print_node(node)
+        for parent in node.result_parents:
+            self.print_all_result_parents_from_node(node=parent, print_node=True)
+
+    def print_all_expression_parents_from_node(self, node, print_node=True):
+        if print_node is True:
+            self.print_node(node)
+        for parent in node.expression_parents:
+            self.print_all_expression_parents_from_node(node=parent, print_node=True)
 
     def print_all_children_from_node(self, node: Node, depth=0):
         print(depth, end="")
-        print("Rules implied in : ", self.node.rules_implied_in)
         self.print_node(node)
         for children in node.children:
             self.print_all_children_from_node(node=children, depth=depth + 1)
@@ -125,7 +136,7 @@ class Tree:
         self.print_node(implication_node)
         self.print_all_children_from_node(children_two)
 
-    def create_child_tree(self, rule, implication_node, rules_implied_in, in_result=False):
+    def create_child_tree(self, rule, implication_node, rules_implied_in, is_result=False):
         stack = []
         for c in rule:
             if c.isupper() and c.isalpha():
@@ -134,20 +145,32 @@ class Tree:
                 connector_node = ConnectorNode(c, self)
                 if c == "!":
                     node_children_one = stack.pop()
-                    node_children_one.operand_parents.append(connector_node)
+                    node_children_one.expression_parents.append(connector_node)
                     connector_node.children.append(node_children_one)
                 else:
+                    # Taking last two elem of stack
                     node_children_one = stack.pop()
                     node_children_two = stack.pop()
-                    node_children_one.rules_implied_in.append(rules_implied_in)
-                    node_children_two.rules_implied_in.append(rules_implied_in)
-                    node_children_one.operand_parents.append(connector_node)
-                    node_children_two.operand_parents.append(connector_node)
+
+                    # Setting connector node as parent of both node
+                    if is_result:
+                        # Keeping the rules implying this parent
+                        node_children_one.rules_implied_in.append(rules_implied_in)
+                        node_children_two.rules_implied_in.append(rules_implied_in)
+                        node_children_one.result_parents.append(connector_node)
+                        node_children_two.result_parents.append(connector_node)
+                    else:
+                        node_children_one.expression_parents.append(connector_node)
+                        node_children_two.expression_parents.append(connector_node)
+                    # Setting both node as child for the connector node
                     connector_node.children.append(node_children_one)
                     connector_node.children.append(node_children_two)
                 stack.append(connector_node)
         last_elem = stack.pop()
-        last_elem.operand_parents.append(implication_node)
+        if is_result:
+            last_elem.result_parents.append(implication_node)
+        else:
+            last_elem.expression_parents.append(implication_node)
         last_elem.rules_implied_in.append(rules_implied_in)
         implication_node.children.append(last_elem)
 
@@ -159,15 +182,16 @@ class Tree:
             self.create_child_tree(
                 rule[0], implication_node=implication_node, rules_implied_in=rule
             )
+            # Creating results tree
             self.create_child_tree(
-                rule[2], implication_node=implication_node, rules_implied_in=rule
+                rule[2], implication_node=implication_node, rules_implied_in=rule, is_result=True
             )
-            self.print_tree_from_implication(implication_node=implication_node)
+            # self.print_tree_from_implication(implication_node=implication_node)
 
     def travel_graph_for_letter(self, letter, node):
         # if type(node) == ConnectorNode: // Does this mean anything
         node.visited = True
-        for parent in node.operand_parents:
+        for parent in node.expression_parents:
             print("PARENT ", parent.visited, end=" ")
             self.print_node(parent)
             print()

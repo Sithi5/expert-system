@@ -3,7 +3,8 @@ class Node:
 
     def __init__(self, tree):
         self.children = []
-        self.operand_parents = []
+        self.expression_parents = []
+        self.result_parents = []
         self.visited = False
         self.state = False
         self.rules_implied_in = []
