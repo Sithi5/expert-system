@@ -143,28 +143,6 @@ class Tree:
             )
             self.tree_printer.print_tree_from_implication(implication_node=implication_node)
 
-    def travel_graph_for_letter(self, letter, node):
-        # if type(node) == ConnectorNode: // Does this mean anything
-        node.visited = True
-        for parent in node.expression_parents:
-            print("PARENT ", parent.visited, end=" ")
-            self.print_node(parent)
-            print()
-            if parent.visited == False:
-                letter.way.append(parent)
-                self.travel_graph_for_letter(letter, parent)
-        for child in node.children:
-            print("CHILD ", child.visited, end=" ")
-            self.print_node(child)
-            print()
-            if child.visited == False:
-                letter.way.append(child)
-                self.travel_graph_for_letter(letter, child)
-
-    def print_way(self, letter):
-        for step in letter.way:
-            self.print_node(step)
-
 
 # partie de droite test:
 
