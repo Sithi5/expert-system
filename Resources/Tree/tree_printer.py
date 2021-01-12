@@ -52,7 +52,7 @@ class TreePrinter:
         self.print_node(implication_node)
         self.print_all_children_from_node(children_two)
 
-    def travel_graph_for_letter(self, letter, node):
+    def travel_graph_for_node(self, start_node, node):
         # if type(node) == ConnectorNode: // Does this mean anything
         node.visited = True
         for parent in node.expression_parents:
@@ -60,16 +60,16 @@ class TreePrinter:
             self.print_node(parent)
             print()
             if parent.visited == False:
-                letter.way.append(parent)
-                self.travel_graph_for_letter(letter, parent)
+                start_node.way.append(parent)
+                self.travel_graph_for_node(start_node, parent)
         for child in node.children:
             print("CHILD ", child.visited, end=" ")
             self.print_node(child)
             print()
-        if child.visited == False:
-            letter.way.append(child)
-            self.travel_graph_for_letter(letter, child)
+            if child.visited == False:
+                start_node.way.append(child)
+                self.travel_graph_for_node(start_node, child)
 
-    def print_way(self, letter):
-        for step in letter.way:
+    def print_way(self, node):
+        for step in node.way:
             self.tree_printer.print_node(step)
