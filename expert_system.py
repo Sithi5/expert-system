@@ -38,8 +38,8 @@ def main_test(file, vb):
 		tree = Tree(vb)
 		tree.create_all_letternode(parser.rules)
 		tree.set_letters_state(parser.rules, parser.facts)
-		tree.create_rules_tree()
 		tree.rules = parser.rules
+		tree.create_rules_tree()
 		result = "Nothing"
 		return result
 	except Exception as error:
@@ -71,7 +71,7 @@ if __name__ == "__main__":
 		tree = Tree(args.verbose)
 		tree.create_all_letternode(parser.rules)
 		tree.set_letters_state(parser.rules, parser.facts)
-		tree.create_rules_tree()
 		tree.rules = parser.rules
+		tree.create_rules_tree()
 	except Exception as error:
 		pass
