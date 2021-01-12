@@ -1,4 +1,5 @@
-from Resources.Utils.colors import *
+from Resources.Utils.colors import YELLOW, PURPLE, RED, END
+
 
 class Logger:
 	def __init__(self, type, vb=False):
