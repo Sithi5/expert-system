@@ -4,6 +4,7 @@ from Resources.Tree.node import LetterNode, ConnectorNode, Node
 
 class TreePrinter:
     def print_tree(self, node):
+
         root = node
         print("Printing the tree : ")
         while root:
@@ -14,6 +15,7 @@ class TreePrinter:
             root = root.children
 
     def print_node(self, node):
+        """Printing a node using the type for ConnectorNode or name for LetterNode"""
         if isinstance(node, ConnectorNode):
             print(node.type, end=" ")
         elif isinstance(node, LetterNode):

@@ -76,3 +76,5 @@ if __name__ == "__main__":
     tree_printer.print_all_result_parents_from_node(tree.letters["A"])
     print("\nTesting print expression parent for letter A : ")
     tree_printer.print_all_expression_parents_from_node(tree.letters["A"])
+    tree_printer.print_node()
+    tree_printer.()

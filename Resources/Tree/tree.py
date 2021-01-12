@@ -91,7 +91,13 @@ class Tree:
             self.root_node = node
             self.root_node.children = None
 
-    def create_child_tree(self, rule, implication_node, rules_implied_in, is_result=False):
+    def creating_tree_from_npi_rules(
+        self, rule, implication_node, rules_implied_in, is_result=False
+    ):
+        """Linking node to their parents node.
+        rule: input rule with NPI system.
+        rules_implied_in: The full rule to add for result node to keep in memory.
+        is_result: Set to true to link result_parents to children instead of expression_parents"""
         stack = []
         for c in rule:
             if c.isupper() and c.isalpha():
@@ -107,14 +113,15 @@ class Tree:
                     node_children_one = stack.pop()
                     node_children_two = stack.pop()
 
-                    # Setting connector node as parent of both node
                     if is_result:
                         # Keeping the rules implying this parent
                         node_children_one.rules_implied_in.append(rules_implied_in)
                         node_children_two.rules_implied_in.append(rules_implied_in)
+                        # Setting connector node as parent of both node
                         node_children_one.result_parents.append(connector_node)
                         node_children_two.result_parents.append(connector_node)
                     else:
+                        # Setting connector node as parent of both node
                         node_children_one.expression_parents.append(connector_node)
                         node_children_two.expression_parents.append(connector_node)
                     # Setting both node as child for the connector node
@@ -134,11 +141,11 @@ class Tree:
             implication_node = ConnectorNode(rule[1], self)
             implication_node.rules_implied_in.append(rule)
             # Have to be first !
-            self.create_child_tree(
+            self.creating_tree_from_npi_rules(
                 rule[0], implication_node=implication_node, rules_implied_in=rule
             )
             # Creating results tree
-            self.create_child_tree(
+            self.creating_tree_from_npi_rules(
                 rule[2], implication_node=implication_node, rules_implied_in=rule, is_result=True
             )
             self.tree_printer.print_tree_from_implication(implication_node=implication_node)
