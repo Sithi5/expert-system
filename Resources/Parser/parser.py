@@ -4,9 +4,12 @@ from Resources.Utils.log import Logger
 OPERATORS = "+|^"
 
 
-OPERATORS = ['!', '+', '|', '^', '(', ')']
-PRIORITY = {'^': 0, '|': 1, '+': 2, '!': 3}
-REGEX = re.compile(r"(^((\()*(!){0,2})*[A-Z](\))*(([+|^]((\()*(!){0,2})*[A-Z](\))*)*)?$)")
+OPERATORS = ["!", "+", "|", "^", "(", ")"]
+PRIORITY = {"^": 0, "|": 1, "+": 2, "!": 3}
+REGEX = re.compile(
+	r"(^((\()*(!){0,2})*[A-Z](\))*(([+|^]((\()*(!){0,2})*[A-Z](\))*)*)?$)"
+)
+
 
 class Rule:
 	def __init__(self, line, splited_line, it, vb):
@@ -17,33 +20,39 @@ class Rule:
 		self.expression = self.check_rule(splited_line[0])
 		self.result = self.check_rule(splited_line[1])
 
-
 	def check_rule(self, string):
 		if string.count("(") != string.count(")"):
 			self.logger.error("Mismatching parantheses in rule")
 		if REGEX.match(string) is None:
-			self.logger.error(f'Rule format is incorrect at line {self.line_nb + 1}')
+			self.logger.error(
+				f"Rule format is incorrect at line {self.line_nb + 1}"
+			)
 		return self.create_rule(string)
 
 	def create_rule(self, rule):
 		stack = []
-		output = '' 
+		output = ""
 		for value in rule:
 			if value not in OPERATORS:
 				output += value
-			elif value == '(':
-				stack.append('(')
-			elif value == ')':
-				while stack and stack[-1] != '(':
+			elif value == "(":
+				stack.append("(")
+			elif value == ")":
+				while stack and stack[-1] != "(":
 					output += stack.pop()
 				stack.pop()
 			else:
-				while stack and stack[-1] != '(' and value != '!' and PRIORITY[value] <= PRIORITY[stack[-1]]:
+				while (
+					stack
+					and stack[-1] != "("
+					and value != "!"
+					and PRIORITY[value] <= PRIORITY[stack[-1]]
+				):
 					output += stack.pop()
 				stack.append(value)
 		while stack:
 			output += stack.pop()
-		output = output.replace('!!', '')
+		output = output.replace("!!", "")
 		return output
 
 	def __repr__(self):
@@ -68,9 +77,9 @@ class Parser:
 		facts_set = 0
 		queries_set = 0
 		self.logger.info("Starting parsing")
-		for it,line in enumerate(self.input):
+		for it, line in enumerate(self.input):
 			line = line.split("#", 1)[0]
-			line = (''.join(line.split()))
+			line = "".join(line.split())
 			if not line:
 				continue
 			if line[0] == "=":
@@ -116,4 +125,3 @@ class Parser:
 			self.logger.info(f"Queries detected : {self.queries}")
 		else:
 			self.logger.error("Queries format incorrect")
-

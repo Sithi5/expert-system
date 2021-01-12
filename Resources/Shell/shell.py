@@ -1,8 +1,11 @@
 import cmd, sys
 import re
-from Resources.Utils.colors import *
+from Resources.Utils.colors import YELLOW, GREEN, BLUE, END
 
-REGEX = re.compile(r"(^((\()*(!){0,2})*[A-Z](\))*(([+|^]((\()*(!){0,2})*[A-Z](\))*)*)?$)")
+REGEX = re.compile(
+	r"(^((\()*(!){0,2})*[A-Z](\))*(([+|^]((\()*(!){0,2})*[A-Z](\))*)*)?$)"
+)
+
 
 class Shell(cmd.Cmd):
 	intro = "Welcome to the expert-system shell.   Type help or ? to list commands.\n"
@@ -19,9 +22,14 @@ class Shell(cmd.Cmd):
 		elif len(arg) >= 1:
 			arg = arg.replace(" ", "")
 			splited_line = re.split("=>|<=>", arg)
-			if splited_line[0].count("(") != splited_line[0].count(")") or splited_line[1].count("(") != splited_line[1].count(")"):
+			if splited_line[0].count("(") != splited_line[0].count(
+				")"
+			) or splited_line[1].count("(") != splited_line[1].count(")"):
 				print("Mismatching parantheses in rule")
-			if REGEX.match(splited_line[0]) is None or REGEX.match(splited_line[1]) is None:
+			if (
+				REGEX.match(splited_line[0]) is None
+				or REGEX.match(splited_line[1]) is None
+			):
 				print("Rule format is incorrect")
 			self.rules.append(arg)
 		else:
@@ -49,7 +57,9 @@ class Shell(cmd.Cmd):
 			self.rules.pop(int(arg))
 		except Exception:
 			if len(self.rules) > 0:
-				print(f"Need to be an {GREEN}int{END} in between {YELLOW}0{END} and {YELLOW}{len(self.rules) - 1}{END}")
+				print(
+					f"Need to be an {GREEN}int{END} in between {YELLOW}0{END} and {YELLOW}{len(self.rules) - 1}{END}"
+				)
 			else:
 				print(f"There is no rule to delete")
 		pass
@@ -134,6 +144,9 @@ class Shell(cmd.Cmd):
 
 	def do_end(self, arg):
 		"Close the shell window, and launch expert-system"
+		print(f"Your file :\n{'-' * 30}")
+		self.do_show_all(None)
+		print(f"{'-'*30}")
 		return True
 
 	def do_exit(self, arg):
