@@ -10,8 +10,10 @@ def main(file, vb):
         tree = Tree(vb)
         tree.create_all_letternode(parser.rules)
         tree.set_letters_state(parser.rules, parser.facts)
-        tree.create_rules_tree()
         tree.rules = parser.rules
+        tree.create_rules_tree()
+        tree.print_all_parent_from_node(tree.letters["B"])
+
         result = "Nothing"
         return result
     except Exception as error:
