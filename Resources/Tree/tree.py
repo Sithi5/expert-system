@@ -2,9 +2,6 @@ from Resources.Utils.log import Logger
 from Resources.Tree.node import LetterNode, ConnectorNode, Node
 from Resources.Tree.tree_printer import TreePrinter
 
-OPERATORS = ["+", "^", "|", "=>", "<=>", "!"]
-LST_OP = {"+": "&", "|": "|", "^": "^"}
-
 
 class Tree:
     _rules = []
@@ -50,10 +47,14 @@ class Tree:
                     letter_list.append(l)
         return list(set(letter_list))
 
-    def create_all_letternode(self, rules):
+    def create_all_letternode(self, rules, facts, queries):
         self.logger.info("Creating LetterNodes")
         letter_list = self.get_all_letters(rules)
-        self.letters.update(dict((letter, LetterNode(letter, self)) for letter in letter_list))
+        for letter in facts:
+            letter_list.append(letter)
+        for letter in queries:
+            letter_list.append(letter)
+        self.letters.update(dict((letter, LetterNode(letter)) for letter in letter_list))
 
     def init_letter_state(self, letter_name, value):
         letter = self.letters.get(letter_name)
@@ -66,17 +67,16 @@ class Tree:
                 self.logger.warning(f"Letter already '{letter_name}' set in fact section before")
             letter.state_fixed = True
 
-    def init_letters_state(self, rules, facts):
+    def init_letters_state(self, rules, facts, queries):
         self.logger.info("Setting up states")
         letter_list = self.get_all_letters(rules)
         for letter in letter_list:
             self.init_letter_state(letter, False)
+        for querie in queries:
+            self.init_letter_state(querie, False)
         for fact in facts:
             self.init_letter_state(fact, True)
         self.logger.info("End")
-
-    def create_connector_node(self, rules):
-        self.logger.info("create connector node")
 
     def push_back_node(self, node):
         if self.root_node:
@@ -103,7 +103,7 @@ class Tree:
             if c.isupper() and c.isalpha():
                 stack.append(self.letters[c])
             else:
-                connector_node = ConnectorNode(c, self)
+                connector_node = ConnectorNode(op_type="".join(c))
                 if c == "!":
                     node_children_one = stack.pop()
                     node_children_one.expression_parents.append(connector_node)
@@ -138,7 +138,7 @@ class Tree:
 
     def create_rules_tree(self):
         for rule in self.rules:
-            implication_node = ConnectorNode(rule[1], self)
+            implication_node = ConnectorNode(op_type="".join(rule[1]))
             implication_node.rules_implied_in.append(rule)
             # Have to be first !
             self.creating_tree_from_npi_rules(

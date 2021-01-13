@@ -36,8 +36,8 @@ def main_test(file, vb):
     try:
         parser = parsing(file, vb)
         tree = Tree(vb)
-        tree.create_all_letternode(parser.rules)
-        tree.init_letters_state(parser.rules, parser.facts)
+        tree.create_all_letternode(parser.rules, parser.facts, parser.queries)
+        tree.init_letters_state(parser.rules, parser.facts, parser.queries)
         tree.rules = parser.rules
         tree.create_rules_tree()
         result = "Nothing"
@@ -65,14 +65,13 @@ if __name__ == "__main__":
     except Exception as error:
         pass
     tree = Tree(args.verbose)
-    tree.create_all_letternode(parser.rules)
-    tree.init_letters_state(parser.rules, parser.facts)
+    tree.create_all_letternode(parser.rules, parser.facts, parser.queries)
+    tree.init_letters_state(parser.rules, parser.facts, parser.queries)
     tree.rules = parser.rules
     tree.create_rules_tree()
     tree_printer = TreePrinter()
     truth_table = Truth_table()
     solver = QueriesSolver(vb=args.verbose)
-
     solver.solve_queries(queries=parser.queries, letters=tree.letters)
     print()
     for letter in parser.queries:
