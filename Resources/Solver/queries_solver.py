@@ -5,12 +5,13 @@ from Resources.Utils.log import Logger
 
 class QueriesSolver:
     trust_table = Truth_table()
+
     def __init__(self, vb, queries, tree):
         self.logger = Logger("QueriesSolver", vb)
         self.logger.info("Initialization of class")
         self.queries = queries
         self.tree = tree
-        self.solve_queries(queries,tree.letters)
+        self.solve_queries(queries, tree.letters)
 
     def get_expression_node_state(self, node) -> bool:
         if isinstance(node, LetterNode):
@@ -18,12 +19,14 @@ class QueriesSolver:
         elif isinstance(node, ConnectorNode):
             if node.type == "!":
                 ret1 = self.get_expression_node_state(node.children[0])
-                return self.trust_table.find_operand_value(node,ret1,None)
+                return self.trust_table.find_operand_value(node, ret1, None)
             else:
                 ret1 = self.get_expression_node_state(node.children[0])
                 ret2 = self.get_expression_node_state(node.children[1])
-                return self.trust_table.find_operand_value(node,ret1,ret2)
+                return self.trust_table.find_operand_value(node, ret1, ret2)
 
+    def get_result_node_state(self, node):
+        raise NotImplementedError
 
     def get_implication_state(self, implication_node: ConnectorNode):
         if implication_node.visited is False:
@@ -51,6 +54,8 @@ class QueriesSolver:
                     for result_parent in letter_node.result_parents:
                         if result_parent.type == "=>":
                             ret = self.get_implication_state(implication_node=result_parent)
+                        else:
+                            ret = self.get_result_node_state(node=result_parent)
                         if current_state is False or (current_state is None and ret is True):
                             current_state = ret
                 letter_node.state = current_state
