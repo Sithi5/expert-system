@@ -7,34 +7,72 @@ class QueriesSolver:
     def __init__(self, vb):
         self.logger = Logger("QueriesSolver", vb)
         self.logger.info("Initialization of class")
-        self.dict_operators_functions = {
-            "=>": self.implication_operator,
-            "+": self.and_operator,
-            "!": self.no_operator,
-            "^": self.xor_operator,
-            "|": self.or_operator,
+        self.expression_operators_functions = {
+            "+": self.get_expression_and_operator_state,
+            "!": self.get_expression_not_operator_state,
+            "^": self.get_expression_xor_operator_state,
+            "|": self.get_expression_or_operator_state,
         }
 
-    def implication_operator(self):
-        pass
+    def get_expression_not_operator_state(self, node) -> bool:
+        if node.visited is False:
+            ret1 = self.get_expression_node_state(node.children[0])
+            node.visited = True
+            node.state = not ret1
+        return node.state
 
-    def and_operator(self):
-        # A + B
-        # OPERATOR A+B.visited = true
-        # if A ! visited : --> solve A
-        # if B ! visited : --> solve B
-        # RETURN A && B
-        pass
+    def get_expression_and_operator_state(self, node) -> bool:
+        if node.visited is False:
+            ret1 = self.get_expression_node_state(node.children[0])
+            ret2 = self.get_expression_node_state(node.children[1])
+            node.visited = True
+            if ret1 is True and ret2 is True:
+                node.state = True
+            elif ret1 is False or ret2 is False:
+                node.state = False
+            else:
+                node.state = None
+        return node.state
 
-    def no_operator(self, node):
-        # return not node.children[0].state
-        pass
+    def get_expression_or_operator_state(self, node) -> bool:
+        if node.visited is False:
+            ret1 = self.get_expression_node_state(node.children[0])
+            ret2 = self.get_expression_node_state(node.children[1])
+            if ret1 is True or ret2 is True:
+                node.state = True
+            elif ret1 is None or ret2 is None:
+                node.state = None
+            else:
+                node.state = False
+            node.visited = True
+        return node.state
 
-    def xor_operator(self):
-        pass
+    def get_expression_xor_operator_state(self, node) -> bool:
+        if node.visited is False:
+            ret1 = self.get_expression_node_state(node.children[0])
+            ret2 = self.get_expression_node_state(node.children[1])
+            if (ret1 is True and ret2 is False) or (ret1 is False and ret2 is True):
+                node.state = True
+            elif ((ret1 is True or ret1 is None) and (ret2 is None or ret1 is False)) or (
+                (ret2 is True or ret2 is None) and (ret1 is None or ret1 is False)
+            ):
+                node.state = None
+            else:
+                node.state = False
+            node.visited = True
+        return node.state
 
-    def or_operator(self):
-        pass
+    def get_expression_node_state(self, node) -> bool:
+        if isinstance(node, LetterNode):
+            return self.solving_letter_state(node)
+        elif isinstance(node, ConnectorNode):
+            return self.expression_operators_functions[node.type](node=node))
+
+    def get_implication_state(self, implication_node: ConnectorNode):
+        if implication_node.visited is False:
+            implication_node.state = self.get_expression_node_state(implication_node.children[0])
+            implication_node.visited = True
+        return implication_node.state
 
     def get_letter_state(self, letter_node: LetterNode) -> bool:
         """Return True, False or None depending of the state of the letter,
@@ -46,37 +84,29 @@ class QueriesSolver:
         else:
             return False
 
-    def get_state(self, node):
-        if isinstance(node, ConnectorNode):
-            for child in node.children:
-                if child.state is None:
-                    return
-            node.state = True
-
-    def solving(self, node):
-        if isinstance(node, LetterNode):
-            print("path: ", node.name, node.state)
-        else:
-            print("path: ", node.type, node.state)
-        self.get_state(node)
-        if node.visited is False or node.state is None:
-            node.visited = True
-            if isinstance(node, LetterNode):
-                for parent in node.result_parents:
-                    node.state = self.solving(parent)
-            if isinstance(node, ConnectorNode):
-                for child in node.children:
-                    node.state = self.solving(child)
-        return node.state
-
-    def solving_from_letter(self, letter_node: LetterNode):
-        self.logger.info(f"Letter node = {letter_node} | state = {letter_node.state}")
+    def solving_letter_state(self, letter_node: LetterNode) -> bool:
+        """This method solve the letter state and return it's state"""
+        if letter_node.currently_solving is False:
+            letter_node.currently_solving = True
+            if letter_node.is_solved is not True:
+                current_state = self.get_letter_state(letter_node)
+                if current_state is not True:
+                    for result_parent in letter_node.result_parents:
+                        if result_parent.type == "=>":
+                            ret = self.get_implication_state(implication_node=result_parent)
+                        if current_state is False or (current_state is None and ret is True):
+                            current_state = ret
+                letter_node.state = current_state
+                letter_node.is_solved = True
+            letter_node.currently_solving = False
+        return self.get_letter_state(letter_node)
 
     def solve_queries(self, queries: list, letters: dict):
         """Solve queries for a set of letters_node"""
         for querie in queries:
-            self.solving(letters[querie])
-            # self.solving_from_letter(letters[querie])
+            for rule in letters[querie].rules_implied_in:
+                print("letter : ", querie, " have rule implied in = ", rule)
+            self.solving_letter_state(letters[querie])
             print(f"{letters[querie]} is {letters[querie].state}")
 
 
