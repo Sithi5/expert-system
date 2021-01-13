@@ -4,69 +4,26 @@ from Resources.Utils.log import Logger
 
 
 class QueriesSolver:
-    def __init__(self, vb):
+    trust_table = Truth_table()
+    def __init__(self, vb, queries, tree):
         self.logger = Logger("QueriesSolver", vb)
         self.logger.info("Initialization of class")
-        self.expression_operators_functions = {
-            "+": self.get_expression_and_operator_state,
-            "!": self.get_expression_not_operator_state,
-            "^": self.get_expression_xor_operator_state,
-            "|": self.get_expression_or_operator_state,
-        }
-
-    def get_expression_not_operator_state(self, node) -> bool:
-        if node.visited is False:
-            ret1 = self.get_expression_node_state(node.children[0])
-            node.visited = True
-            node.state = not ret1
-        return node.state
-
-    def get_expression_and_operator_state(self, node) -> bool:
-        if node.visited is False:
-            ret1 = self.get_expression_node_state(node.children[0])
-            ret2 = self.get_expression_node_state(node.children[1])
-            node.visited = True
-            if ret1 is True and ret2 is True:
-                node.state = True
-            elif ret1 is False or ret2 is False:
-                node.state = False
-            else:
-                node.state = None
-        return node.state
-
-    def get_expression_or_operator_state(self, node) -> bool:
-        if node.visited is False:
-            ret1 = self.get_expression_node_state(node.children[0])
-            ret2 = self.get_expression_node_state(node.children[1])
-            if ret1 is True or ret2 is True:
-                node.state = True
-            elif ret1 is None or ret2 is None:
-                node.state = None
-            else:
-                node.state = False
-            node.visited = True
-        return node.state
-
-    def get_expression_xor_operator_state(self, node) -> bool:
-        if node.visited is False:
-            ret1 = self.get_expression_node_state(node.children[0])
-            ret2 = self.get_expression_node_state(node.children[1])
-            if (ret1 is True and ret2 is False) or (ret1 is False and ret2 is True):
-                node.state = True
-            elif ((ret1 is True or ret1 is None) and (ret2 is None or ret1 is False)) or (
-                (ret2 is True or ret2 is None) and (ret1 is None or ret1 is False)
-            ):
-                node.state = None
-            else:
-                node.state = False
-            node.visited = True
-        return node.state
+        self.queries = queries
+        self.tree = tree
+        self.solve_queries(queries,tree.letters)
 
     def get_expression_node_state(self, node) -> bool:
         if isinstance(node, LetterNode):
             return self.solving_letter_state(node)
         elif isinstance(node, ConnectorNode):
-            return self.expression_operators_functions[node.type](node=node)
+            if node.type == "!":
+                ret1 = self.get_expression_node_state(node.children[0])
+                return self.trust_table.find_operand_value(node,ret1,None)
+            else:
+                ret1 = self.get_expression_node_state(node.children[0])
+                ret2 = self.get_expression_node_state(node.children[1])
+                return self.trust_table.find_operand_value(node,ret1,ret2)
+
 
     def get_implication_state(self, implication_node: ConnectorNode):
         if implication_node.visited is False:

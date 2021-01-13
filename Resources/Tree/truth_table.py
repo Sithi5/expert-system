@@ -17,10 +17,13 @@ class Truth_table():
 					[True,False,True],
 					[True,True,False]]
 
-	table_imply = [[False,False,True],
-					[False,True,True],
-					[True,False,False],
-					[True,True,True]]
+	table_not = [[False,True],
+					[True,False]]
+
+	# table_imply = [[False,False,True],
+	# 				[False,True,True],
+	# 				[True,False,False],
+	# 				[True,True,True]]
 
 	def find_operand_table(self,connector_node):
 		if connector_node.type == "+":
@@ -30,12 +33,16 @@ class Truth_table():
 		elif connector_node.type == "^":
 			return(self.table_xor)
 		else:
-			return(self.table_imply)
+			return(self.table_not)
 	
-	def find_operand_value(self,connector_node,node1,node2):
-		print("\nexpression: ",node1.name,"(",node1.state,")",connector_node.type,node2.name,"(",node2.state,")")
+	def find_operand_value(self,connector_node,children1_state,children2_state):
 		table = self.find_operand_table(connector_node)
+		if children2_state is None:
+			for trust in table:
+				if children1_state == trust[0]:
+					return trust[1]
+			return table
 		for truth in table:
-			if node1.state == truth[0] and node2.state == truth[1]:
-				print("RESULT= ",truth[2])
-				return(truth[2])
+			if children1_state == truth[0] and children2_state == truth[1]:
+				return truth[2]
+
