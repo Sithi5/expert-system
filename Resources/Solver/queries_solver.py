@@ -66,7 +66,7 @@ class QueriesSolver:
         if isinstance(node, LetterNode):
             return self.solving_letter_state(node)
         elif isinstance(node, ConnectorNode):
-            return self.expression_operators_functions[node.type](node=node))
+            return self.expression_operators_functions[node.type](node=node)
 
     def get_implication_state(self, implication_node: ConnectorNode):
         if implication_node.visited is False:
