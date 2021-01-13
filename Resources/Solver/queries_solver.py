@@ -14,9 +14,13 @@ class QueriesSolver:
         self.solve_queries(queries, tree.letters)
 
     def get_expression_node_state(self, node) -> bool:
+        if node.visited is True:
+            return node.state
         if isinstance(node, LetterNode):
+            # solving_letter_state is setting node.visited to true
             return self.solving_letter_state(node)
         elif isinstance(node, ConnectorNode):
+            node.visited = True
             if node.type == "!":
                 ret1 = self.get_expression_node_state(node.children[0])
                 return self.trust_table.find_operand_value(node, ret1, None)
@@ -35,20 +39,16 @@ class QueriesSolver:
         return implication_node.state
 
     def get_letter_state(self, letter_node: LetterNode) -> bool:
-        """Return True, False or None depending of the state of the letter,
-        respectively for state True, False or undetermined."""
-        if letter_node.state is None:
-            return None
-        elif letter_node.state is True or letter_node.state_fixed is True:
+        """Only usefull for the state_fixed"""
+        if letter_node.state is True or letter_node.state_fixed is True:
             return True
-        else:
-            return False
+        return letter_node.state
 
     def solving_letter_state(self, letter_node: LetterNode) -> bool:
         """This method solve the letter state and return it's state"""
         if letter_node.currently_solving is False:
             letter_node.currently_solving = True
-            if letter_node.is_solved is not True:
+            if letter_node.visited is not True:
                 current_state = self.get_letter_state(letter_node)
                 if current_state is not True:
                     for result_parent in letter_node.result_parents:
@@ -59,7 +59,7 @@ class QueriesSolver:
                         if current_state is False or (current_state is None and ret is True):
                             current_state = ret
                 letter_node.state = current_state
-                letter_node.is_solved = True
+                letter_node.visited = True
             letter_node.currently_solving = False
         return self.get_letter_state(letter_node)
 

@@ -1,5 +1,5 @@
-!A | !G ^ G   => B ^ T
+!A | !G ^ G   => B
 A => C
 F + X => T
-=AGF
-?B
+=AGFX
+?BT
