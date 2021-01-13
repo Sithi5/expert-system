@@ -31,8 +31,6 @@ class Tree:
                 table[2].append(l)
             self._rules.append(table)
         if self.vb:
-            print()
-            print("Setting rules for tree :")
             for idx, rule in enumerate(self.rules):
                 print("rule num ", idx, " = ", rule)
 
@@ -148,7 +146,6 @@ class Tree:
             self.creating_tree_from_npi_rules(
                 rule[2], implication_node=implication_node, rules_implied_in=rule, is_result=True
             )
-            self.tree_printer.print_tree_from_implication(implication_node=implication_node)
 
 
 # partie de droite test:

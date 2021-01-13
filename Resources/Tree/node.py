@@ -15,6 +15,8 @@ class LetterNode(Node):
     def __init__(self, name):
         super(LetterNode, self).__init__()
         self.name = name
+        self.currently_solving = False
+        self.is_solved = False
 
     def __repr__(self):
         return f"LetterNode({self.name})"
