@@ -55,7 +55,7 @@ class Tree:
         letter_list = self.get_all_letters(rules)
         self.letters.update(dict((letter, LetterNode(letter, self)) for letter in letter_list))
 
-    def set_letter_state(self, letter_name, value):
+    def init_letter_state(self, letter_name, value):
         letter = self.letters.get(letter_name)
         if letter is None:
             self.logger.warning(f"No match found for letter '{letter_name}' in fact section")
@@ -66,13 +66,13 @@ class Tree:
                 self.logger.warning(f"Letter already '{letter_name}' set in fact section before")
             letter.state_fixed = True
 
-    def set_letters_state(self, rules, facts):
+    def init_letters_state(self, rules, facts):
         self.logger.info("Setting up states")
         letter_list = self.get_all_letters(rules)
         for letter in letter_list:
-            self.set_letter_state(letter, False)
+            self.init_letter_state(letter, False)
         for fact in facts:
-            self.set_letter_state(fact, True)
+            self.init_letter_state(fact, True)
         self.logger.info("End")
 
     def create_connector_node(self, rules):
