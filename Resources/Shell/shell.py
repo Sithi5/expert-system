@@ -1,7 +1,11 @@
 import cmd, sys
+import numpy as np
 import re
 import readline
-
+from Resources.Parser.parser import Parser, Rule
+from Resources.Tree.tree import Tree
+from Resources.Tree.tree_printer import TreePrinter
+from Resources.Solver.queries_solver import QueriesSolver
 from Resources.Utils.colors import YELLOW, GREEN, BLUE, END
 
 readline.parse_and_bind("tab: complete")
@@ -17,22 +21,40 @@ class Shell(cmd.Cmd):
     facts = {}
     queries = {}
 
+    def check_rule(self, arg, splited_line):
+        if splited_line[0].count("(") != splited_line[0].count(")") or splited_line[1].count(
+            "("
+        ) != splited_line[1].count(")"):
+            print("Mismatching parantheses in rule")
+            return
+        if REGEX.match(splited_line[0]) is None or REGEX.match(splited_line[1]) is None:
+            print("Rule format is incorrect")
+            return
+        if "<=>" in arg:
+            self.rules.append(f"{splited_line[1]}=>{splited_line[0]}")
+            self.rules.append(f"{splited_line[0]}=>{splited_line[1]}")
+        elif "<=" in arg:
+            self.rules.append(f"{splited_line[1]}=>{splited_line[0]}")
+        else:
+            self.rules.append(arg)
+
+
     def do_add_rule(self, arg):
         "add_rule <rule> : Add a rule"
-        if "=>" not in arg and "<=>" not in arg and len(arg) >= 1:
+        if "=>" not in arg and "<=>" not in arg and "<=" not in arg and len(arg) >= 1:
             print("Rule format is incorrect")
         elif len(arg) >= 1:
             arg = arg.replace(" ", "")
-            splited_line = re.split("=>|<=>", arg)
-            if splited_line[0].count("(") != splited_line[0].count(")") or splited_line[1].count(
-                "("
-            ) != splited_line[1].count(")"):
-                print("Mismatching parantheses in rule")
-            if REGEX.match(splited_line[0]) is None or REGEX.match(splited_line[1]) is None:
-                print("Rule format is incorrect")
-            self.rules.append(arg)
+            splited_line = re.split("=>|<=>|<=", arg)
+            self.check_rule(arg, splited_line)
+
         else:
             print("Rule can't be empty")
+
+    @staticmethod
+    def finx_max(list):
+        list_len = [len(i) for i in list]
+        return np.argmax(np.array(list_len))
 
     def do_add_fact(self, arg):
         "add_fact <fact(s)> : Add one or more facts"
@@ -141,11 +163,43 @@ class Shell(cmd.Cmd):
         else:
             print("There is no queries to be shown")
 
+    def do_load_file(self, arg):
+        print(arg)
+        with open(arg, "w") as file :
+            f = file.readlines()
+            for line in f:
+                print(line)
+                if line[0] == "?":
+                    self.do_add_querie(line)
+                if line[0] == "=":
+                    self.do_add_facts(line)
+                else:
+                    self.do_add_rule(line)
+
+    def do_save_file(self, arg):
+        pass
+
+    def do_process(self, arg):
+        "Solve with expert-system and keep the shell open"
+        self.do_show_all(None)
+        parser = Parser(None, True)
+        for it, line in enumerate(self.rules):
+            splited_line = re.split("=>|<=>", line)
+            rule = Rule(line, splited_line, it, True)
+            parser.rules.append(rule)
+        parser.facts = list(self.facts.keys())
+        parser.queries = list(self.queries.keys())
+        tree = Tree(True, parser.rules)
+        tree.create_tree(parser.rules, parser.facts, parser.queries)
+        solver = QueriesSolver(vb=True, queries=parser.queries, tree=tree)
+        solver.solve_queries()
+        print("\n".join(solver.result))
+
     def do_end(self, arg):
         "Close the shell window, and launch expert-system"
-        print(f"Your file :\n{'-' * 30}")
+        print(f"Your file :\n{'-' * len(self.rules[self.finx_max(self.rules)])}")
         self.do_show_all(None)
-        print(f"{'-'*30}")
+        print(f"{'-' * len(self.rules[self.finx_max(self.rules)])}")
         return True
 
     def do_exit(self, arg):

@@ -4,7 +4,6 @@ import re
 from Resources.Utils.log import Logger
 from Resources.Parser.parser import Parser, Rule
 from Resources.Tree.tree import Tree
-from Resources.Tree.truth_table import Truth_table
 from Resources.Tree.tree_printer import TreePrinter
 from Resources.Solver.queries_solver import QueriesSolver
 from Resources.Shell.shell import Shell
