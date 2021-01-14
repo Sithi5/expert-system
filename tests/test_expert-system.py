@@ -404,6 +404,18 @@ def test_error_33():
     )
 
 
+def test_ultra_hard_1():
+    assert "A is True\nB is False\nC is undetermined\nH is True" in main_test(
+        open(Path(__file__ + "/../" + "files/tests_bonus/test_ultra_hard_1").absolute()), False
+    )
+
+
+def test_ultra_hard_2():
+    assert "A is True\nB is True\nC is True\nH is True" in main_test(
+        open(Path(__file__ + "/../" + "files/tests_bonus/test_ultra_hard_2").absolute()), False
+    )
+
+
 # def test_conflict_1():
 #     assert "Error" in main_test(
 #         open(Path(__file__ + "/../" + "files/test_conflict_1").absolute()), False

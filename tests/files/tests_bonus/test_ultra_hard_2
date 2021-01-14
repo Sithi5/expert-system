@@ -1,0 +1,6 @@
+A => !B | (C ^ !H)
+D + !E | (F + !G) => A
+
+=DEFHB
+?ABCH
+#A is True, B is True, C is True, H is True
