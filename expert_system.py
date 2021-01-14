@@ -34,9 +34,9 @@ def parsing(file, vb):
 
 def tree_solver(parser, vb):
     """
-        Create an instance of class tree
-        The class tree create the relation tree between all nodes
-        then try to solve each querie in queries list
+    Create an instance of class tree
+    The class tree create the relation tree between all nodes
+    then try to solve each querie in queries list
     """
     tree = Tree(vb, parser.rules)
     tree.create_tree(parser.rules, parser.facts, parser.queries)
@@ -56,14 +56,17 @@ def main_test(file, vb):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Expert System")
-    parser.add_argument("-vb", "--verbose", action="store_true", help="Enable verbose")
     subparsers = parser.add_subparsers()
     file = subparsers.add_parser("file")
     file.set_defaults(which="file")
-    shell = subparsers.add_parser("shell")
+    file.add_argument("-vb", "--verbose", action="store_true", help="Enable verbose")
     file.add_argument("filename", type=argparse.FileType("r"), help="The file containing rules")
+    shell = subparsers.add_parser("shell")
+    shell.add_argument("-vb", "--verbose", action="store_true", help="Enable verbose")
     shell.set_defaults(which="shell")
     args = parser.parse_args()
+    if len(vars(args)) == 0:
+        exit("expert_system.py: error: you need too choose between {file,shell}")
     try:
         parser = (
             parsing_shell(args.verbose)
@@ -72,5 +75,4 @@ if __name__ == "__main__":
         )
         print(tree_solver(parser=parser, vb=args.verbose))
     except Exception as error:
-        raise Exception
         print(error)

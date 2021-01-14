@@ -1,5 +1,10 @@
 from Resources.Utils.log import Logger
-from Resources.Tree.node import LetterNode, ConnectorNode, Node, LetterOrConnectorNode
+from Resources.Tree.node import (
+    LetterNode,
+    ConnectorNode,
+    Node,
+    LetterOrConnectorNode,
+)
 from Resources.Tree.tree_printer import TreePrinter
 
 
@@ -8,8 +13,7 @@ class Tree:
 
     def __init__(self, vb, rules):
         self.vb = vb
-        self.logger = Logger("Tree", self.vb)
-        self.logger.info("Initialization of tree", vb)
+        self.logger = Logger("Tree", vb)
         self.tree_printer = TreePrinter()
         self.rules = rules
         self.letters = {}
@@ -31,9 +35,6 @@ class Tree:
             for l in rule.result:
                 table[2].append(l)
             self._rules.append(table)
-        if self.vb:
-            for idx, rule in enumerate(self.rules):
-                print("rule num ", idx, " = ", rule)
 
     def create_tree(self, rules, facts, queries):
         self.create_all_letternode(rules, facts, queries)
@@ -52,7 +53,7 @@ class Tree:
         return list(set(letter_list))
 
     def create_all_letternode(self, rules, facts, queries):
-        self.logger.info("Creating LetterNodes")
+        self.logger.info("Creating letters nodes")
         letter_list = self.get_all_letters(rules)
         for letter in facts:
             letter_list.append(letter)
@@ -72,7 +73,7 @@ class Tree:
             letter.state_fixed = True
 
     def init_letters_state(self, rules, facts, queries):
-        self.logger.info("Setting up states")
+        self.logger.info("Setting up letters states")
         letter_list = self.get_all_letters(rules)
         for letter in letter_list:
             self.init_letter_state(letter, False)
@@ -80,7 +81,6 @@ class Tree:
             self.init_letter_state(querie, False)
         for fact in facts:
             self.init_letter_state(fact, True)
-        self.logger.info("End")
 
     def push_back_node(self, node: LetterOrConnectorNode):
         if self.root_node:
@@ -96,7 +96,11 @@ class Tree:
             self.root_node.children = None
 
     def creating_tree_from_npi_rules(
-        self, rule, implication_node: ConnectorNode, rules_implied_in, is_result=False
+        self,
+        rule,
+        implication_node: ConnectorNode,
+        rules_implied_in,
+        is_result=False,
     ):
         """Linking node to their parents node.
         rule: input rule with NPI system.
@@ -141,14 +145,20 @@ class Tree:
         implication_node.children.append(last_elem)
 
     def create_rules_tree(self):
+        self.logger.info(f"Setting up relation between letters", self.vb)
         for rule in self.rules:
             implication_node = ConnectorNode(op_type="".join(rule[1]))
             implication_node.rules_implied_in.append(rule)
             # Have to be first !
             self.creating_tree_from_npi_rules(
-                rule[0], implication_node=implication_node, rules_implied_in=rule
+                rule[0],
+                implication_node=implication_node,
+                rules_implied_in=rule,
             )
             # Creating results tree
             self.creating_tree_from_npi_rules(
-                rule[2], implication_node=implication_node, rules_implied_in=rule, is_result=True
+                rule[2],
+                implication_node=implication_node,
+                rules_implied_in=rule,
+                is_result=True,
             )

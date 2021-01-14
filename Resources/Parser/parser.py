@@ -16,6 +16,9 @@ class Rule:
         self.logger = Logger("Parser.Rule", self.vb)
         self.line_nb = it
         self.implication = "=>"
+        self.logger.info(
+            f"Creation of rule:\t{splited_line[0]} {self.implication} {splited_line[1]}", self.vb
+        )
         self.expression = self.check_rule(splited_line[0])
         self.result = self.check_rule(splited_line[1])
 
@@ -67,7 +70,6 @@ class Parser:
         self.facts = []
         self.queries = []
         self.rules = []
-        self.logger.info("Initialization of class")
 
     def parsing(self):
         rules_set = 0
@@ -88,12 +90,12 @@ class Parser:
             else:
                 if "=>" not in line and "<=>" not in line and "<=" not in line:
                     self.logger.error("Rule implication incorrect")
-                splited_line = re.split("=>|<=>|<=", line)
-                splited_line = self.deal_with_implication(line, splited_line)
-                self.rules.append(Rule(line, splited_line, it, self.vb)
                 if rules_set == 0:
                     self.logger.info("Rules detected")
                     rules_set = 1
+                splited_line = re.split("=>|<=>|<=", line)
+                splited_line = self.deal_with_implication(line, splited_line, it)
+                self.rules.append(Rule(line, splited_line, it, self.vb))
         if rules_set == 0:
             self.logger.warning("No rules detected")
         if queries_set == 0:
@@ -107,10 +109,10 @@ class Parser:
             self.logger.error("Facts already defined")
         if len(line) > 0 and line.isalpha() and line.isupper():
             self.facts = list(line)
-            self.logger.info(f"Facts detected : {self.facts}")
+            self.logger.info(f"Facts detected:\t\t{' '.join(self.facts)}")
         elif len(line) == 0:
             self.facts = []
-            self.logger.info(f"Facts detected : {self.facts}")
+            self.logger.info(f"Facts detected:\t\t{' '.join(self.facts)}")
         else:
             self.logger.error("Facts format incorrect")
 
@@ -119,14 +121,13 @@ class Parser:
             self.logger.error("Queries already defined")
         if line.isalpha() and line.isupper():
             self.queries = list(line)
-            self.logger.info(f"Queries detected : {self.queries}")
+            self.logger.info(f"Queries detected:\t{' '.join(self.queries)}")
         else:
             self.logger.error("Queries format incorrect")
 
-
-    def deal_with_implication(self, line, splited_line):
+    def deal_with_implication(self, line, splited_line, it):
         if "<=>" in line:
-            self.rules.append(Rule(line, splited_line, it, self.vb)
+            self.rules.append(Rule(line, splited_line, it, self.vb))
             return splited_line[::-1]
         elif "<=" in line:
             return splited_line[::-1]
