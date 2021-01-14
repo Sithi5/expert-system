@@ -12,14 +12,13 @@ class Node:
         self.state = False
         self.rules_implied_in = []
         self.state_fixed = False
+        self.currently_solving = False
 
 
 class LetterNode(Node):
     def __init__(self, name):
         super(LetterNode, self).__init__()
         self.name = name
-        self.currently_solving = False
-        self.is_solved = False
 
     def __repr__(self):
         return f"LetterNode({self.name})"

@@ -87,7 +87,7 @@ class Parser:
                 self.queries_parsing(line[1:], queries_set)
                 queries_set = 1
             else:
-                if "=>" not in line and "<=>" not in line:
+                if "=>" not in line and "<=>" not in line and "<=" not in line:
                     self.logger.error("Rule implication incorrect")
                 splited_line = re.split("=>|<=>", line)
                 rule = Rule(line, splited_line, it, self.vb)

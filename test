@@ -1,5 +1,11 @@
-!A | !G ^ G   => B
-A => C
-F + X => T
-=AGFX
-?BT
+A => B | (C + D)
+=A
+?B
+
+B is None
+
+A => B | (!C + !D)
+=ACD
+?B
+
+B is None

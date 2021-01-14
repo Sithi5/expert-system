@@ -18,6 +18,7 @@ class QueriesSolver:
             "|": self.get_result_or_operator_state,
             "=>": self.get_implication_state,
         }
+        self.result = []
 
     def get_expression_node_state(self, node: LetterOrConnectorNode) -> bool:
         if node.visited is True:
@@ -60,18 +61,97 @@ class QueriesSolver:
             node.visited = True
         return node.state
 
-    def get_result_or_operator_state(
+    def get_reversed_result_operator_state(
         self, node: LetterOrConnectorNode, children_node_looking_for_state: LetterOrConnectorNode
     ):
-        raise NotImplementedError
+        """This method is visiting the result tree from a parent to their childrens to see if
+        the current ConnectorNode can be set to true"""
+        if node.children[0] != children_node_looking_for_state:
+            other_children_node = node.children[0]
+        elif node.children[1] != children_node_looking_for_state:
+            other_children_node = node.children[0]
+        if isinstance(other_children_node, LetterNode):
+            return self.solving_letter_state(letter_node=other_children_node)
+        else:
+            ret = self.get_reversed_result_operator_state(
+                node=other_children_node, children_node_looking_for_state=node
+            )
+            if isinstance(node, ConnectorNode) and node.type == "!":
+                return self.trust_table.find_operand_value(node, ret, None)
+            else:
+                return self.trust_table.find_operand_value(node, ret, True)
 
     def get_result_xor_operator_state(
         self, node: LetterOrConnectorNode, children_node_looking_for_state: LetterOrConnectorNode
     ):
+        # TODO
+        other_children_state_if_not_connector = None
         if node.visited is not True:
-            raise NotImplementedError
-            node.visited = True
-        return not node.state
+            # Preventing infinite loop when looking for the other child
+            if node.currently_solving is False:
+                node.state = self.get_result_node_state(
+                    node=node.result_parents[0], children_node_looking_for_state=node
+                )
+                # Getting the other child
+                if node.children[0] == children_node_looking_for_state:
+                    other_children_node = node.children[1]
+                else:
+                    other_children_node = node.children[0]
+                # If the child is a "not" operator, getting the reverse state result to know if it's true or not
+                # if isinstance(other_children_node, ConnectorNode) and (
+                #     other_children_node.type == "!"
+                # ):
+                #     other_children_state_if_not_connector = not self.get_reversed_result_operator_state(
+                #         node=other_children_node,
+                #         children_node_looking_for_state=children_node_looking_for_state,
+                #     )
+                node.currently_solving = False
+                node.visited = True
+            else:
+                pass
+        # if node.state is True or node.state is None:
+        #     if other_children_state_if_not_connector is False and node.state is True:
+        #         return True
+        #     else:
+        #         return None
+        # else:
+        #     return False
+
+    def get_result_or_operator_state(
+        self, node: LetterOrConnectorNode, children_node_looking_for_state: LetterOrConnectorNode
+    ):
+        other_children_state_if_not_connector = None
+        if node.visited is not True:
+            # Preventing infinite loop when looking for the other child
+            if node.currently_solving is False:
+                node.currently_solving = True
+                node.state = self.get_result_node_state(
+                    node=node.result_parents[0], children_node_looking_for_state=node
+                )
+                # Getting the other child
+                if node.children[0] == children_node_looking_for_state:
+                    other_children_node = node.children[1]
+                else:
+                    other_children_node = node.children[0]
+                # If the child is a "not" operator, getting the reverse state result to know if it's true or not
+                if isinstance(other_children_node, ConnectorNode) and (
+                    other_children_node.type == "!"
+                ):
+                    other_children_state_if_not_connector = not self.get_reversed_result_operator_state(
+                        node=other_children_node,
+                        children_node_looking_for_state=children_node_looking_for_state,
+                    )
+                node.currently_solving = False
+                node.visited = True
+            else:
+                pass
+        if node.state is True or node.state is None:
+            if other_children_state_if_not_connector is False and node.state is True:
+                return True
+            else:
+                return None
+        else:
+            return False
 
     def get_result_node_state(
         self, node: LetterOrConnectorNode, children_node_looking_for_state: LetterOrConnectorNode
@@ -97,19 +177,19 @@ class QueriesSolver:
 
     def solving_letter_state(self, letter_node: LetterNode) -> bool:
         """This method solve the letter state and return it's state"""
-        if letter_node.currently_solving is False:
+        self.logger.info("Solving letter : ", letter_node.name)
+        if letter_node.currently_solving is False and letter_node.visited is not True:
             letter_node.currently_solving = True
-            if letter_node.visited is not True:
-                current_state = self.get_letter_state(letter_node)
-                if current_state is not True:
-                    for result_parent in letter_node.result_parents:
-                        ret = self.get_result_node_state(
-                            node=result_parent, children_node_looking_for_state=letter_node
-                        )
-                        if current_state is False or (current_state is None and ret is True):
-                            current_state = ret
-                letter_node.state = current_state
-                letter_node.visited = True
+            current_state = self.get_letter_state(letter_node)
+            if current_state is not True:
+                for result_parent in letter_node.result_parents:
+                    ret = self.get_result_node_state(
+                        node=result_parent, children_node_looking_for_state=letter_node
+                    )
+                    if current_state is False or (current_state is None and ret is True):
+                        current_state = ret
+            letter_node.state = current_state
+            letter_node.visited = True
             letter_node.currently_solving = False
         return self.get_letter_state(letter_node)
 
@@ -117,81 +197,12 @@ class QueriesSolver:
         """Solve queries for a set of letters_node"""
         letters = self.tree.letters
         for querie in self.queries:
-            for rule in letters[querie].rules_implied_in:
-                print("letter : ", querie, " have rule implied in = ", rule)
+            self.logger.info(
+                f"Before: Letter : {letters[querie].name} | State : {(letters[querie].state)}"
+            )
             self.solving_letter_state(letters[querie])
-            print(f"{letters[querie]} is {letters[querie].state}")
+            self.result.append(f"{letters[querie].name} is {letters[querie].state}")
+            self.logger.info(
+                f"After:  Letter : {letters[querie].name} | State : {(letters[querie].state)}"
+            )
 
-
-# A => B
-# =A
-# ?B
-
-# def implication_operator(self, implication_node: ConnectorNode) -> bool:
-#     ret = self.backtracking_childrens(implication_node.children[0])
-#     print("ret implication operator = ", ret)
-#     return ret
-
-
-# def backtracking_parents(self, node) -> bool:
-#     self.logger.info(f"In backtracking parents : node = {node}")
-#     if len(node.result_parents) > 0:
-#         for result_parent in node.result_parents:
-#             return self.dict_fun[result_parent.type[0]](implication_node=result_parent)
-#     else:
-#         return self.get_letter_state(letter_node=node)
-
-# def backtracking_childrens(self, node):
-#     if len(node.children) == 0:
-#         self.solve_letter(letter_node=node)
-#         return self.get_letter_state(letter_node=node)
-#     for children in node.children:
-#         if isinstance(children, ConnectorNode):
-#             self.dict_fun[children.type](implication_node=children)
-#         if isinstance(children, LetterNode):
-#             self.solve_letter(letter_node=children)
-#             return self.get_letter_state(letter_node=children)
-
-# def solve_letter(self, letter_node: LetterNode):
-#     self.logger.info(
-#         f"Letter node = {letter_node} | state = {letter_node.state} | Letter node state_fixed = {letter_node.state_fixed}"
-#     )
-#     if self.get_letter_state(letter_node) is True:
-#         return
-#     else:
-#         ret = self.backtracking_parents(letter_node)
-#         if ret is None:
-#             letter_node.state = None
-#         elif ret is True:
-#             letter_node.state = True
-#         else:
-#             letter_node.state = False
-
-# a => B
-# on cherche B
-# solving(B)
-# on arrive sur '=>'
-# solving(=>)
-# on arrive sur A
-# solving de A
-# A true
-# true => B
-# pour que => soi true
-# alors B set true
-# => set true
-
-# A + B => C
-#  on cherche C
-#  solving(c)
-#  =>
-#  solving =>
-# on arrive sur +
-# solving +
-# on arrive sur A
-# solving A True
-# on arrive sur B
-# solving B False
-# +
-# solving + set + a false
-# =>
-# false => C donc

@@ -27,22 +27,28 @@ def parsing_shell(vb):
 
 
 def parsing(file, vb):
-    # logger = Logger("Main", vb)
     parser = Parser(file.readlines(), vb)
     parser.parsing()
     return parser
 
 
+def tree_solver(parser, vb):
+    tree = Tree(vb)
+    tree.create_all_letternode(parser.rules, parser.facts, parser.queries)
+    tree.init_letters_state(parser.rules, parser.facts, parser.queries)
+    tree.rules = parser.rules
+    tree.create_rules_tree()
+    tree_printer = TreePrinter()
+    truth_table = Truth_table()
+    solver = QueriesSolver(vb=vb, queries=parser.queries, tree=tree)
+    solver.solve_queries()
+    return "\n".join(solver.result)
+
+
 def main_test(file, vb):
     try:
         parser = parsing(file, vb)
-        tree = Tree(vb)
-        tree.create_all_letternode(parser.rules, parser.facts, parser.queries)
-        tree.init_letters_state(parser.rules, parser.facts, parser.queries)
-        tree.rules = parser.rules
-        tree.create_rules_tree()
-        result = "Nothing"
-        return result
+        return tree_solver(parser=parser, vb=vb)
     except Exception as error:
         return "Error :" + error.args[1]
 
@@ -63,45 +69,6 @@ if __name__ == "__main__":
             if args.which == "shell"
             else parsing(args.filename, args.verbose)
         )
+        print(tree_solver(parser=parser, vb=args.verbose))
     except Exception as error:
         pass
-    tree = Tree(args.verbose)
-    tree.create_all_letternode(parser.rules, parser.facts, parser.queries)
-    tree.init_letters_state(parser.rules, parser.facts, parser.queries)
-    tree.rules = parser.rules
-    tree.create_rules_tree()
-    tree_printer = TreePrinter()
-    truth_table = Truth_table()
-    solver = QueriesSolver(vb=args.verbose, queries=parser.queries, tree=tree)
-    solver.solve_queries()
-    print()
-    for letter in parser.queries:
-        letter_node = tree.letters[letter]
-        print("letter name : ", letter_node.name, "\tletter.state : ", letter_node.state)
-
-    # ###Trust_table TRYOUT
-    # truth_table.find_operand_value(
-    #     tree.letters["A"].expression_parents[0],
-    #     tree.letters["A"].expression_parents[0].children[0],
-    #     tree.letters["A"].expression_parents[0].children[1],
-    # )
-    # truth_table.find_operand_value(
-    #     tree.letters["D"].expression_parents[0],
-    #     tree.letters["D"].expression_parents[0].children[0],
-    #     tree.letters["D"].expression_parents[0].children[1],
-    # )
-    # truth_table.find_operand_value(
-    #     tree.letters["G"].expression_parents[0],
-    #     tree.letters["G"].expression_parents[0].children[0],
-    #     tree.letters["G"].expression_parents[0].children[1],
-    # )
-    # ###END TRYOUT
-    # print("\nTesting print rules for A: ")
-    # for idx, rule in enumerate(tree.letters["A"].rules_implied_in):
-    #     print("rule number ", idx, " :", rule)
-    # print("\nTesting print result parent for letter A : ")
-    # tree_printer.print_all_result_parents_from_node(tree.letters["A"])
-    # print("\nTesting print expression parent for letter A : ")
-    # tree_printer.print_all_expression_parents_from_node(tree.letters["A"])
-    # print("\nTesting print graph for letter A : ")
-    # tree_printer.travel_graph_for_node(tree.letters["A"], tree.letters["A"])
