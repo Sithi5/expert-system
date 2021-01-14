@@ -177,7 +177,14 @@ class Shell(cmd.Cmd):
                     self.do_add_rule(line)
 
     def do_save_file(self, arg):
-        pass
+        with open(arg, "w") as file:
+            rules = "\n".join(self.rules)
+            facts = "=" + "".join(list(self.facts))
+            queries = "?" + "".join(list(self.queries))
+            content = f"{rules}\n{facts}\n{queries}\n"
+            file.write(content)
+        print(content)
+        print("Saved in :", arg)
 
     def do_process(self, arg):
         "Solve with expert-system and keep the shell open"
