@@ -1,3 +1,6 @@
+from typing import Union
+
+
 class Node:
     way = []
 
@@ -31,3 +34,5 @@ class ConnectorNode(Node):
         self.type = op_type
         self.state = None
 
+
+LetterOrConnectorNode = Union[ConnectorNode, LetterNode]

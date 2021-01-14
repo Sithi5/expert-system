@@ -1,5 +1,5 @@
 from Resources.Utils.log import Logger
-from Resources.Tree.node import LetterNode, ConnectorNode, Node
+from Resources.Tree.node import LetterNode, ConnectorNode, Node, LetterOrConnectorNode
 from Resources.Tree.tree_printer import TreePrinter
 
 
@@ -76,7 +76,7 @@ class Tree:
             self.init_letter_state(fact, True)
         self.logger.info("End")
 
-    def push_back_node(self, node):
+    def push_back_node(self, node: LetterOrConnectorNode):
         if self.root_node:
             save_root = self.root_node
             while self.root_node:
@@ -90,7 +90,7 @@ class Tree:
             self.root_node.children = None
 
     def creating_tree_from_npi_rules(
-        self, rule, implication_node, rules_implied_in, is_result=False
+        self, rule, implication_node: ConnectorNode, rules_implied_in, is_result=False
     ):
         """Linking node to their parents node.
         rule: input rule with NPI system.

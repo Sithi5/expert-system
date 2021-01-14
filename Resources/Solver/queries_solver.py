@@ -1,5 +1,5 @@
 from Resources.Tree.truth_table import Truth_table
-from Resources.Tree.node import LetterNode, ConnectorNode, Node
+from Resources.Tree.node import LetterNode, ConnectorNode, Node, LetterOrConnectorNode
 from Resources.Utils.log import Logger
 
 
@@ -19,7 +19,7 @@ class QueriesSolver:
             "=>": self.get_implication_state,
         }
 
-    def get_expression_node_state(self, node) -> bool:
+    def get_expression_node_state(self, node: LetterOrConnectorNode) -> bool:
         if node.visited is True:
             return node.state
         if isinstance(node, LetterNode):
@@ -35,33 +35,59 @@ class QueriesSolver:
                 ret2 = self.get_expression_node_state(node.children[1])
                 return self.trust_table.find_operand_value(node, ret1, ret2)
 
-    def get_result_and_operator_state(self, node):
-        print("ici and result operator method")
+    def get_result_and_operator_state(
+        self, node: LetterOrConnectorNode, children_node_looking_for_state: LetterOrConnectorNode
+    ):
         if node.visited is not True:
-            node.state = self.get_result_node_state(node=node.result_parents[0])
+            node.state = self.get_result_node_state(
+                node=node.result_parents[0],
+                children_node_looking_for_state=children_node_looking_for_state,
+            )
             node.visited = True
         return node.state
 
-    def get_result_not_operator_state(self, node):
+    def get_result_not_operator_state(
+        self, node: LetterOrConnectorNode, children_node_looking_for_state: LetterOrConnectorNode
+    ):
+        if node.visited is not True:
+            ret = self.get_result_node_state(
+                node=node.result_parents[0], children_node_looking_for_state=node
+            )
+            if ret is None:
+                node.state = None
+            else:
+                node.state = not ret
+            node.visited = True
+        return node.state
+
+    def get_result_or_operator_state(
+        self, node: LetterOrConnectorNode, children_node_looking_for_state: LetterOrConnectorNode
+    ):
         raise NotImplementedError
 
-    def get_result_or_operator_state(self, node):
-        raise NotImplementedError
+    def get_result_xor_operator_state(
+        self, node: LetterOrConnectorNode, children_node_looking_for_state: LetterOrConnectorNode
+    ):
+        if node.visited is not True:
+            raise NotImplementedError
+            node.visited = True
+        return not node.state
 
-    def get_result_xor_operator_state(self, node):
-        raise NotImplementedError
-
-    def get_result_node_state(self, node):
+    def get_result_node_state(
+        self, node: LetterOrConnectorNode, children_node_looking_for_state: LetterOrConnectorNode
+    ):
         if isinstance(node, LetterNode):
             self.logger.error("Something is wrong")
         else:
-            return self.result_operators_functions[node.type](node)
+            return self.result_operators_functions[node.type](
+                node=node, children_node_looking_for_state=children_node_looking_for_state
+            )
 
-    def get_implication_state(self, implication_node: ConnectorNode):
-        if implication_node.visited is False:
-            implication_node.state = self.get_expression_node_state(implication_node.children[0])
-            implication_node.visited = True
-        return implication_node.state
+    def get_implication_state(self, node: ConnectorNode, *args, **kwargs):
+        if node.visited is False:
+            node.state = self.get_expression_node_state(node.children[0])
+            node.visited = True
+        return node.state
 
     def get_letter_state(self, letter_node: LetterNode) -> bool:
         """Only usefull for the state_fixed"""
@@ -77,7 +103,9 @@ class QueriesSolver:
                 current_state = self.get_letter_state(letter_node)
                 if current_state is not True:
                     for result_parent in letter_node.result_parents:
-                        ret = self.get_result_node_state(node=result_parent)
+                        ret = self.get_result_node_state(
+                            node=result_parent, children_node_looking_for_state=letter_node
+                        )
                         if current_state is False or (current_state is None and ret is True):
                             current_state = ret
                 letter_node.state = current_state
