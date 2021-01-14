@@ -11,7 +11,13 @@ class QueriesSolver:
         self.logger.info("Initialization of class")
         self.queries = queries
         self.tree = tree
-        self.solve_queries(queries, tree.letters)
+        self.result_operators_functions = {
+            "+": self.get_result_and_operator_state,
+            "!": self.get_result_not_operator_state,
+            "^": self.get_result_xor_operator_state,
+            "|": self.get_result_or_operator_state,
+            "=>": self.get_implication_state,
+        }
 
     def get_expression_node_state(self, node) -> bool:
         if node.visited is True:
@@ -29,8 +35,27 @@ class QueriesSolver:
                 ret2 = self.get_expression_node_state(node.children[1])
                 return self.trust_table.find_operand_value(node, ret1, ret2)
 
-    def get_result_node_state(self, node):
+    def get_result_and_operator_state(self, node):
+        print("ici and result operator method")
+        if node.visited is not True:
+            node.state = self.get_result_node_state(node=node.result_parents[0])
+            node.visited = True
+        return node.state
+
+    def get_result_not_operator_state(self, node):
         raise NotImplementedError
+
+    def get_result_or_operator_state(self, node):
+        raise NotImplementedError
+
+    def get_result_xor_operator_state(self, node):
+        raise NotImplementedError
+
+    def get_result_node_state(self, node):
+        if isinstance(node, LetterNode):
+            self.logger.error("Something is wrong")
+        else:
+            return self.result_operators_functions[node.type](node)
 
     def get_implication_state(self, implication_node: ConnectorNode):
         if implication_node.visited is False:
@@ -52,10 +77,7 @@ class QueriesSolver:
                 current_state = self.get_letter_state(letter_node)
                 if current_state is not True:
                     for result_parent in letter_node.result_parents:
-                        if result_parent.type == "=>":
-                            ret = self.get_implication_state(implication_node=result_parent)
-                        else:
-                            ret = self.get_result_node_state(node=result_parent)
+                        ret = self.get_result_node_state(node=result_parent)
                         if current_state is False or (current_state is None and ret is True):
                             current_state = ret
                 letter_node.state = current_state
@@ -63,9 +85,10 @@ class QueriesSolver:
             letter_node.currently_solving = False
         return self.get_letter_state(letter_node)
 
-    def solve_queries(self, queries: list, letters: dict):
+    def solve_queries(self):
         """Solve queries for a set of letters_node"""
-        for querie in queries:
+        letters = self.tree.letters
+        for querie in self.queries:
             for rule in letters[querie].rules_implied_in:
                 print("letter : ", querie, " have rule implied in = ", rule)
             self.solving_letter_state(letters[querie])
