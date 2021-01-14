@@ -40,7 +40,6 @@ def tree_solver(parser, vb):
     """
     tree = Tree(vb, parser.rules)
     tree.create_tree(parser.rules, parser.facts, parser.queries)
-    truth_table = Truth_table()
     solver = QueriesSolver(vb=vb, queries=parser.queries, tree=tree)
     solver.solve_queries()
     return "\n".join(solver.result)
