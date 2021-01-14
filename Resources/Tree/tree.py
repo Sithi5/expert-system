@@ -145,7 +145,7 @@ class Tree:
         implication_node.children.append(last_elem)
 
     def create_rules_tree(self):
-        self.logger.info(f"Setting up relation between letters", self.vb)
+        self.logger.info(f"Setting up relation between letters")
         for rule in self.rules:
             implication_node = ConnectorNode(op_type="".join(rule[1]))
             implication_node.rules_implied_in.append(rule)

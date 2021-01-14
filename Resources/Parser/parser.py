@@ -17,7 +17,7 @@ class Rule:
         self.line_nb = it
         self.implication = "=>"
         self.logger.info(
-            f"Creation of rule:\t{splited_line[0]} {self.implication} {splited_line[1]}", self.vb
+            f"Creation of rule:\t{splited_line[0]} {self.implication} {splited_line[1]}"
         )
         self.expression = self.check_rule(splited_line[0])
         self.result = self.check_rule(splited_line[1])

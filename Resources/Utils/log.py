@@ -6,14 +6,15 @@ class Logger:
         self.type = type
         self.vb = vb
 
-    def info(self, message, type=None):
-        info = f"{YELLOW}<{self.type}>{END}"
-        print(f"{info:24} {message}")
+    def info(self, message):
+        if self.vb is True:
+            info = f"{YELLOW}<{self.type}>{END}"
+            print(f"{info:24} {message}")
 
-    def warning(self, message, type=None):
+    def warning(self, message):
         print(f"{PURPLE}<{self.type}> Warning: {END}{message}")
 
-    def error(self, message, type=None):
+    def error(self, message):
         # type = type or self.type
         print(f"{RED}<{self.type}> Error: {END:6}{message}")
         raise Exception("logger", message)
