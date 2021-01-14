@@ -33,12 +33,13 @@ def parsing(file, vb):
 
 
 def tree_solver(parser, vb):
-    tree = Tree(vb)
-    tree.create_all_letternode(parser.rules, parser.facts, parser.queries)
-    tree.init_letters_state(parser.rules, parser.facts, parser.queries)
-    tree.rules = parser.rules
-    tree.create_rules_tree()
-    tree_printer = TreePrinter()
+    """
+        Create an instance of class tree
+        The class tree create the relation tree between all nodes
+        then try to solve each querie in queries list
+    """
+    tree = Tree(vb, parser.rules)
+    tree.create_tree(parser.rules, parser.facts, parser.queries)
     truth_table = Truth_table()
     solver = QueriesSolver(vb=vb, queries=parser.queries, tree=tree)
     solver.solve_queries()
@@ -71,4 +72,5 @@ if __name__ == "__main__":
         )
         print(tree_solver(parser=parser, vb=args.verbose))
     except Exception as error:
-        pass
+        raise Exception
+        print(error)

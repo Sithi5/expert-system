@@ -6,11 +6,12 @@ from Resources.Tree.tree_printer import TreePrinter
 class Tree:
     _rules = []
 
-    def __init__(self, vb):
+    def __init__(self, vb, rules):
         self.vb = vb
         self.logger = Logger("Tree", self.vb)
-        self.logger.info("Initialization of class", vb)
+        self.logger.info("Initialization of tree", vb)
         self.tree_printer = TreePrinter()
+        self.rules = rules
         self.letters = {}
         self.connectors = []
         self.root_node = None
@@ -33,6 +34,11 @@ class Tree:
         if self.vb:
             for idx, rule in enumerate(self.rules):
                 print("rule num ", idx, " = ", rule)
+
+    def create_tree(self, rules, facts, queries):
+        self.create_all_letternode(rules, facts, queries)
+        self.init_letters_state(rules, facts, queries)
+        self.create_rules_tree()
 
     def get_all_letters(self, rules):
         letter_list = []

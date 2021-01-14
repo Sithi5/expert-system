@@ -1,11 +1,3 @@
-A => B | (C + D)
+A => B ^ C
 =A
 ?B
-
-B is None
-
-A => B | (!C + !D)
-=ACD
-?B
-
-B is None

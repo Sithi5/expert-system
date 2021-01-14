@@ -2,8 +2,6 @@ from typing import Union
 
 
 class Node:
-    way = []
-
     def __init__(self):
         self.children = []
         self.expression_parents = []

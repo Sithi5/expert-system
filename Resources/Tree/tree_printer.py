@@ -69,7 +69,3 @@ class TreePrinter:
             if child.visited == False:
                 start_node.way.append(child)
                 self.travel_graph_for_node(start_node, child)
-
-    def print_way(self, node):
-        for step in node.way:
-            self.tree_printer.print_node(step)

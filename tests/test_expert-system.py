@@ -1,6 +1,5 @@
 from expert_system import main_test
 from pathlib import Path
-from Resources.Parser.exceptions import InputError
 
 
 # def test_subject():
