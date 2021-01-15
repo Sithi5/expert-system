@@ -172,7 +172,7 @@ class Shell(cmd.Cmd):
                 if line[0] == "?":
                     self.do_add_querie(line)
                 if line[0] == "=":
-                    self.do_add_facts(line)
+                    self.do_add_fact(line)
                 else:
                     self.do_add_rule(line)
 
