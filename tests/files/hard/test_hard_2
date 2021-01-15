@@ -1,0 +1,13 @@
+A => A
+B => B
+C => C
+A => B
+A => C
+B => A
+B => C
+C => A
+C => B
+
+=A
+?C
+# C is True

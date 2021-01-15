@@ -1,49 +1,6 @@
 from expert_system import main_test
 from pathlib import Path
 
-
-# def test_subject():
-#     assert "B resolved as True" == main_test(
-#         open(Path(__file__ + "/../" + "files/test_subject").absolute()), False
-#     )
-
-
-# def test_simple_bonus_1():
-#     assert "B resolved as True" == main_test(
-#         open(Path(__file__ + "/../" + "files/tests_bonus/test_simple_bonus_1").absolute()), False
-#     )
-
-
-# def test_simple_1():
-#     assert "B is True" == main_test(
-#         open(Path(__file__ + "/../" + "files/simple/test_simple_1").absolute()), False
-#     )
-
-
-# def test_simple_2():
-#     assert "B is True" == main_test(
-#         open(Path(__file__ + "/../" + "files/simple/test_simple_2").absolute()), False
-#     )
-
-
-# def test_simple_3():
-#     assert "B is True" == main_test(
-#         open(Path(__file__ + "/../" + "files/simple/test_simple_3").absolute()), False
-#     )
-
-
-# def test_simple_4():
-#     assert "B is True" == main_test(
-#         open(Path(__file__ + "/../" + "files/simple/test_simple_4").absolute()), False
-#     )
-
-
-# def test_simple_5():
-#     assert "B is True" == main_test(
-#         open(Path(__file__ + "/../" + "files/simple/test_simple_5").absolute()), False
-#     )
-
-
 def test_correction_1():
     assert "A is True\nF is True\nK is True\nP is True" == main_test(
         open(Path(__file__ + "/../" + "files/correction/test_correction_1").absolute()), False
@@ -404,20 +361,243 @@ def test_error_33():
     )
 
 
-def test_ultra_hard_1():
-    assert "A is True\nB is False\nC is undetermined\nH is True" in main_test(
+def test_simple_1():
+    assert "B is True" == main_test(
+        open(Path(__file__ + "/../" + "files/simple/test_simple_1").absolute()), False
+    )
+
+
+def test_simple_2():
+    assert "A is True" == main_test(
+        open(Path(__file__ + "/../" + "files/simple/test_simple_2").absolute()), False
+    )
+
+
+def test_simple_3():
+    assert "B is True" == main_test(
+        open(Path(__file__ + "/../" + "files/simple/test_simple_3").absolute()), False
+    )
+
+
+def test_simple_4():
+    assert "B is True" == main_test(
+        open(Path(__file__ + "/../" + "files/simple/test_simple_4").absolute()), False
+    )
+
+
+def test_simple_5():
+    assert "B is True" == main_test(
+        open(Path(__file__ + "/../" + "files/simple/test_simple_5").absolute()), False
+    )
+
+
+def test_simple_6():
+    assert "B is False" == main_test(
+        open(Path(__file__ + "/../" + "files/simple/test_simple_6").absolute()), False
+    )
+
+
+def test_simple_7():
+    assert "B is True" == main_test(
+        open(Path(__file__ + "/../" + "files/simple/test_simple_7").absolute()), False
+    )
+
+
+def test_hard_1():
+    assert "C is True\nE is True\nG is True\nI is True\nK is True\nM is True" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_1").absolute()), False
+    )
+
+
+def test_hard_2():
+    assert "C is True" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_2").absolute()), False
+    )
+
+
+def test_hard_3():
+    assert "K is True" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_3").absolute()), False
+    )
+
+
+def test_hard_4():
+    assert "A is True\nB is True\nC is Undetermined" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_4").absolute()), False
+    )
+
+
+def test_hard_5():
+    assert "B is True" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_5").absolute()), False
+    )
+
+
+def test_hard_6():
+    assert "D is False" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_6").absolute()), False
+    )
+
+
+def test_hard_7():
+    assert "C is False" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_7").absolute()), False
+    )
+
+
+def test_hard_8():
+    assert "A is False" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_8").absolute()), False
+    )
+
+
+def test_hard_9():
+    assert "A is True" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_9").absolute()), False
+    )
+
+
+def test_hard_10():
+    assert "A is True" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_10").absolute()), False
+    )
+
+
+def test_hard_11():
+    assert "A is True" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_11").absolute()), False
+    )
+
+
+def test_hard_12():
+    assert "E is False" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_12").absolute()), False
+    )
+
+
+def test_hard_13():
+    assert "E is True" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_13").absolute()), False
+    )
+
+
+def test_hard_14():
+    assert "E is False" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_14").absolute()), False
+    )
+
+
+def test_hard_15():
+    assert "E is False" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_15").absolute()), False
+    )
+
+
+def test_hard_16():
+    assert "E is True" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_16").absolute()), False
+    )
+
+
+def test_hard_17():
+    assert "E is False" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_17").absolute()), False
+    )
+
+
+def test_hard_18():
+    assert "E is False" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_18").absolute()), False
+    )
+
+
+def test_hard_19():
+    assert "E is False" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_19").absolute()), False
+    )
+
+
+def test_hard_20():
+    assert "E is True" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_20").absolute()), False
+    )
+
+
+def test_hard_21():
+    assert "E is True" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_21").absolute()), False
+    )
+
+
+def test_hard_22():
+    assert "E is True" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_22").absolute()), False
+    )
+
+
+def test_hard_23():
+    assert "E is True" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_23").absolute()), False
+    )
+
+
+def test_hard_24():
+    assert "E is False" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_24").absolute()), False
+    )
+
+
+def test_hard_25():
+    assert "E is Undetermined" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_25").absolute()), False
+    )
+
+
+def test_hard_26():
+    assert "E is False" == main_test(
+        open(Path(__file__ + "/../" + "files/hard/test_hard_26").absolute()), False
+    )
+
+
+
+def test_bonus_simple_1():
+    assert "G is Undetermined" in main_test(
+        open(Path(__file__ + "/../" + "files/tests_bonus/test_simple_1").absolute()), False
+    )
+
+
+def test_bonus_hard_1():
+    assert "C is Undetermined" in main_test(
+        open(Path(__file__ + "/../" + "files/tests_bonus/test_hard_1").absolute()), False
+    )
+
+
+def test_bonus_hard_2():
+    assert "C is Undetermined" in main_test(
+        open(Path(__file__ + "/../" + "files/tests_bonus/test_hard_2").absolute()), False
+    )
+
+
+def test_bonus_hard_3():
+    assert "E is Undetermined" in main_test(
+        open(Path(__file__ + "/../" + "files/tests_bonus/test_hard_3").absolute()), False
+    )
+
+
+def test_bonus_hard_4():
+    assert "G is Undetermined" in main_test(
+        open(Path(__file__ + "/../" + "files/tests_bonus/test_hard_4").absolute()), False
+    )
+
+
+def test_bonus_ultra_hard_1():
+    assert "" in main_test(
         open(Path(__file__ + "/../" + "files/tests_bonus/test_ultra_hard_1").absolute()), False
     )
 
 
-def test_ultra_hard_2():
+def test_bonus_ultra_hard_2():
     assert "A is True\nB is True\nC is True\nH is True" in main_test(
         open(Path(__file__ + "/../" + "files/tests_bonus/test_ultra_hard_2").absolute()), False
     )
-
-
-# def test_conflict_1():
-#     assert "Error" in main_test(
-#         open(Path(__file__ + "/../" + "files/test_conflict_1").absolute()), False
-#     )
 

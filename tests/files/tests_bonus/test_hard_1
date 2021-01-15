@@ -1,4 +1,8 @@
-A => B + C + D + E + F + G + H + I + J + K + L + M + N
+D + A => B + C | D
+A => D
+A => B
 
 =A
-?CEGIKM
+?C
+
+#C is Undetermined

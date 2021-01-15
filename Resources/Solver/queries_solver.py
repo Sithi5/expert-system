@@ -203,6 +203,6 @@ class QueriesSolver:
             self.logger.info(f"Resolution for letter {letters[querie].name}")
             self.solving_letter_state(letters[querie])
             if letters[querie].state is None:
-                letters[querie].state = "undetermined"
+                letters[querie].state = "Undetermined"
             self.result.append(f"{letters[querie].name} is {letters[querie].state}")
             self.logger.info(f"Found '{letters[querie].state}' for {letters[querie].name}")

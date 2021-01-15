@@ -1,4 +1,6 @@
 A <=> B
 
-=A
-?B
+=B
+?A
+# A is True
+

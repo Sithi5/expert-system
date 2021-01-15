@@ -1,0 +1,7 @@
+A | (B + C) + (C ^ D) => E
+((F | G) + H) + !T => E
+
+=BC
+?E
+
+# E is True

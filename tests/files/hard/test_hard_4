@@ -1,0 +1,5 @@
+A + B <=> C | D
+
+=D
+?ABC
+# A is True\nB is True\nC is False

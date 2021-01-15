@@ -1,5 +1,5 @@
 A => B
-A + !B => F
 
 =A
 ?B
+# B is True
