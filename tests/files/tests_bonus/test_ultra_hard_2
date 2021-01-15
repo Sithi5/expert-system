@@ -3,4 +3,4 @@ D + !E | (F + !G) => A
 
 =DEFHB
 ?ABCH
-#A is True, B is True, C is True, H is True
+#A is True, B is True, C is Undetermined, H is True

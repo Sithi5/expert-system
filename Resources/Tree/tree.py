@@ -106,7 +106,10 @@ class Tree:
                 connector_node.state = False
                 if c == "!":
                     node_children_one = stack.pop()
-                    node_children_one.expression_parents.append(connector_node)
+                    if is_result:
+                        node_children_one.result_parents.append(connector_node)
+                    else:
+                        node_children_one.expression_parents.append(connector_node)
                     connector_node.children.append(node_children_one)
                 else:
                     # Taking last two elem of stack

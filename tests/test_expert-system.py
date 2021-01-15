@@ -1,6 +1,7 @@
 from expert_system import main_test
 from pathlib import Path
 
+
 def test_correction_1():
     assert "A is True\nF is True\nK is True\nP is True" == main_test(
         open(Path(__file__ + "/../" + "files/correction/test_correction_1").absolute()), False
@@ -559,7 +560,6 @@ def test_hard_26():
     )
 
 
-
 def test_bonus_simple_1():
     assert "G is Undetermined" in main_test(
         open(Path(__file__ + "/../" + "files/tests_bonus/test_simple_1").absolute()), False
@@ -591,13 +591,13 @@ def test_bonus_hard_4():
 
 
 def test_bonus_ultra_hard_1():
-    assert "" in main_test(
+    assert "A is True\nB is False\nC is Undetermined\nH is True" in main_test(
         open(Path(__file__ + "/../" + "files/tests_bonus/test_ultra_hard_1").absolute()), False
     )
 
 
 def test_bonus_ultra_hard_2():
-    assert "A is True\nB is True\nC is True\nH is True" in main_test(
+    assert "A is True\nB is True\nC is Undetermined\nH is True" in main_test(
         open(Path(__file__ + "/../" + "files/tests_bonus/test_ultra_hard_2").absolute()), False
     )
 
