@@ -164,7 +164,7 @@ class Shell(cmd.Cmd):
 
     def do_load_file(self, arg):
         print(arg)
-        with open(arg, "w") as file:
+        with open(arg, "r") as file:
             f = file.readlines()
             for line in f:
                 print(line)
