@@ -73,4 +73,4 @@ if __name__ == "__main__":
         )
         print(tree_solver(parser=parser, vb=args.verbose))
     except Exception as error:
-        print(error)
+        pass

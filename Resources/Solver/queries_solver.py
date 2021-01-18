@@ -1,5 +1,6 @@
 from Resources.Tree.truth_table import Truth_table
 from Resources.Tree.node import LetterNode, ConnectorNode, Node, LetterOrConnectorNode
+from Resources.Tree.tree_printer import TreePrinter
 from Resources.Utils.log import Logger
 
 
@@ -8,7 +9,9 @@ class QueriesSolver:
     currently_solving_letters_node = []
 
     def __init__(self, vb, queries, tree):
-        self.logger = Logger("QueriesSolver", vb)
+        self.vb = vb
+        self.tree_printer = TreePrinter(self.vb)
+        self.logger = Logger("QueriesSolver", self.vb)
         self.queries = queries
         self.tree = tree
         self.result_operators_functions = {
@@ -202,6 +205,8 @@ class QueriesSolver:
             letter_node.state = current_state
             if len(self.currently_solving_letters_node) == 1 or current_state is True:
                 letter_node.visited = True
+            if len(self.currently_solving_letters_node) != 1:
+                self.logger.info(f"We know that {letter_node.name} is {letter_node.state!s:>10}")
             self.currently_solving_letters_node.remove(letter_node)
             letter_node.currently_solving = False
         return self.get_letter_state(letter_node)
@@ -212,6 +217,7 @@ class QueriesSolver:
         letters = self.tree.letters
         for querie in self.queries:
             self.logger.info(f"Resolution for letter {letters[querie].name}")
+            self.tree_printer.print_rules_implied_in(letters[querie])
             self.solving_letter_state(letters[querie])
             if letters[querie].state is None:
                 letters[querie].state = "Undetermined"

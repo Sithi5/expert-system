@@ -8,8 +8,8 @@ class Tree:
 
     def __init__(self, vb, rules):
         self.vb = vb
-        self.logger = Logger("Tree", vb)
-        self.tree_printer = TreePrinter()
+        self.logger = Logger("Tree", self.vb)
+        self.tree_printer = TreePrinter(self.vb)
         self.rules = rules
         self.letters = {}
         self.connectors = []
