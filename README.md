@@ -12,17 +12,17 @@
 - &#9745; Set les connexions
 
 ## Verification
-- &#9744; Checker loop
-- &#9744; Checker le **"!"**
-- &#9744; Checker les conflits
+- &#9745; Checker loop
+- &#9745; Checker le **"!"**
+- &#9745; Checker les conflits
 
 ## Resolution
-- &#9744; Parcourir l'arbre et set les states
-- &#9744; Return / Print les resultats
+- &#9745; Parcourir l'arbre et set les states
+- &#9745; Return / Print les resultats
 
 ## Test
-- &#9744; Creer multiples de tests type "simple"
-- &#9744; Creer multiples de tests type "harder"
+- &#9745; Creer multiples de tests type "simple"
+- &#9745; Creer multiples de tests type "harder"
 - &#9745; Creer multiples de tests type "errors"
 - &#9745; Creer multiples de tests type "subject"
 
