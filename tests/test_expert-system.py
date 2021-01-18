@@ -609,7 +609,7 @@ def test_hard_25():
 
 
 def test_hard_26():
-    assert "E is False" == main_test(
+    assert "E is Undetermined" == main_test(
         open(Path(__file__ + "/../" + "files/hard/test_hard_26").absolute()), False
     )
 

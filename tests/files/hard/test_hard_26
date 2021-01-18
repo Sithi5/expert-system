@@ -2,7 +2,7 @@ A => !C | D
 (A | (B + C)) + (C ^ D) => E
 ((F | G) + H) + !T => E
 
-=ABC
+=AB
 ?E
 
-# E is False
+# E is Undetermined
