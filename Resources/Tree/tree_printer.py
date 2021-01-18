@@ -1,8 +1,14 @@
+import itertools
+
 from Resources.Utils.log import Logger
 from Resources.Tree.node import LetterNode, ConnectorNode, Node
 
 
 class TreePrinter:
+    def __init__(self, vb):
+        self.vb = vb
+        self.logger = Logger("TreePrinter", self.vb)
+
     def print_tree(self, node):
 
         root = node
@@ -69,3 +75,13 @@ class TreePrinter:
             if child.visited == False:
                 start_node.way.append(child)
                 self.travel_graph_for_node(start_node, child)
+
+    def print_rules_implied_in(self, letter_node):
+        if self.vb is True:
+            l = []
+            for index, rule in enumerate(letter_node.rules_implied_in):
+                l.append(" ".join(list(itertools.chain.from_iterable(rule))))
+            l = list(set(l))
+            for index, rule in enumerate(l):
+                rule = f"{rule}"
+                self.logger.info(f"Rule n°{index + 1}:{rule:>21}")

@@ -1,6 +1,9 @@
-A | B ^ C + D => E | F
+A + C => B
+C => A
+A+C => R|T
+A + C => B | G
 
-=AD
-?E
+=C
+?G
 
-#E is Undetermined
+#G is Undetermined

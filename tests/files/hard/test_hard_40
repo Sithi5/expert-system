@@ -1,0 +1,14 @@
+C => E
+A + B + C => D
+A | B => C
+A + !B => F
+C | !G => H
+(V ^ W ) + (S | B) => X
+(C | A ) + B => Y + Z
+C | D => X
+E + F => !V
+
+=ABG
+?GVBX
+
+# G is True\nV is False\nB is True\nX is True

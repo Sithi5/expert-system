@@ -1,0 +1,8 @@
+A => !C | D
+(A | (B + C)) + (C ^ D) => E
+((F | G) + H) + !T => E
+
+=AB
+?E
+
+# E is Undetermined

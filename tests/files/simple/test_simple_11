@@ -1,0 +1,5 @@
+A | C => B
+
+=AC
+?B
+# B is True

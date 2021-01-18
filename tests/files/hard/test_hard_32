@@ -1,0 +1,5 @@
+S ^ D | P ^ S => A
+=S
+?A
+
+# A is False

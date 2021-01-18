@@ -1,10 +1,5 @@
 from Resources.Utils.log import Logger
-from Resources.Tree.node import (
-    LetterNode,
-    ConnectorNode,
-    Node,
-    LetterOrConnectorNode,
-)
+from Resources.Tree.node import LetterNode, ConnectorNode, Node, LetterOrConnectorNode
 from Resources.Tree.tree_printer import TreePrinter
 
 
@@ -13,8 +8,8 @@ class Tree:
 
     def __init__(self, vb, rules):
         self.vb = vb
-        self.logger = Logger("Tree", vb)
-        self.tree_printer = TreePrinter()
+        self.logger = Logger("Tree", self.vb)
+        self.tree_printer = TreePrinter(self.vb)
         self.rules = rules
         self.letters = {}
         self.connectors = []
@@ -96,11 +91,7 @@ class Tree:
             self.root_node.children = None
 
     def creating_tree_from_npi_rules(
-        self,
-        rule,
-        implication_node: ConnectorNode,
-        rules_implied_in,
-        is_result=False,
+        self, rule, implication_node: ConnectorNode, rules_implied_in, is_result=False
     ):
         """Linking node to their parents node.
         rule: input rule with NPI system.
@@ -112,9 +103,13 @@ class Tree:
                 stack.append(self.letters[c])
             else:
                 connector_node = ConnectorNode(op_type="".join(c))
+                connector_node.state = False
                 if c == "!":
                     node_children_one = stack.pop()
-                    node_children_one.expression_parents.append(connector_node)
+                    if is_result:
+                        node_children_one.result_parents.append(connector_node)
+                    else:
+                        node_children_one.expression_parents.append(connector_node)
                     connector_node.children.append(node_children_one)
                 else:
                     # Taking last two elem of stack
@@ -148,17 +143,13 @@ class Tree:
         self.logger.info(f"Setting up relation between letters")
         for rule in self.rules:
             implication_node = ConnectorNode(op_type="".join(rule[1]))
+            implication_node.state = False
             implication_node.rules_implied_in.append(rule)
             # Have to be first !
             self.creating_tree_from_npi_rules(
-                rule[0],
-                implication_node=implication_node,
-                rules_implied_in=rule,
+                rule[0], implication_node=implication_node, rules_implied_in=rule
             )
             # Creating results tree
             self.creating_tree_from_npi_rules(
-                rule[2],
-                implication_node=implication_node,
-                rules_implied_in=rule,
-                is_result=True,
+                rule[2], implication_node=implication_node, rules_implied_in=rule, is_result=True
             )
