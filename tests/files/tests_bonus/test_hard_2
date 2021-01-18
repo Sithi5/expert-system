@@ -1,7 +1,6 @@
 A => C ^ D
 A => D ^ B
 A => B ^ E
-A => !E
 
 =A
 ?C
