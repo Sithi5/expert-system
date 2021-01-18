@@ -105,7 +105,7 @@ class QueriesSolver:
                     )
 
                 node.currently_solving = False
-                if len(self.currently_solving_letters_node) == 1:
+                if len(self.currently_solving_letters_node) == 1 or node.state is True:
                     node.visited = True
             else:
                 pass
@@ -144,7 +144,7 @@ class QueriesSolver:
                         children_node_looking_for_state=children_node_looking_for_state,
                     )
                 node.currently_solving = False
-                if len(self.currently_solving_letters_node) == 1:
+                if len(self.currently_solving_letters_node) == 1 or node.state is True:
                     node.visited = True
         if node.state is True or node.state is None:
             if other_children_state_if_not_connector is False and node.state is True:
@@ -167,7 +167,7 @@ class QueriesSolver:
     def get_implication_state(self, node: ConnectorNode, *args, **kwargs):
         if node.visited is False:
             node.state = self.get_expression_node_state(node.children[0])
-            if len(self.currently_solving_letters_node) == 1:
+            if len(self.currently_solving_letters_node) == 1 or node.state is True:
                 node.visited = True
         return node.state
 
@@ -200,7 +200,7 @@ class QueriesSolver:
                         has_been_updated_to_none_or_true = True
                         current_state = ret
             letter_node.state = current_state
-            if len(self.currently_solving_letters_node) == 1:
+            if len(self.currently_solving_letters_node) == 1 or current_state is True:
                 letter_node.visited = True
             self.currently_solving_letters_node.remove(letter_node)
             letter_node.currently_solving = False
