@@ -735,12 +735,12 @@ def test_bonus_hard_4():
 
 
 def test_bonus_ultra_hard_1():
-    assert "" in main_test(
+    assert "A is True\nB is False\nC is Undetermined\nH is True" in main_test(
         open(Path(__file__ + "/../" + "files/tests_bonus/test_ultra_hard_1").absolute()), False
     )
 
 
 def test_bonus_ultra_hard_2():
-    assert "A is True\nB is True\nC is True\nH is True" in main_test(
+    assert "A is True\nB is True\nC is Undetermined\nH is True" in main_test(
         open(Path(__file__ + "/../" + "files/tests_bonus/test_ultra_hard_2").absolute()), False
     )

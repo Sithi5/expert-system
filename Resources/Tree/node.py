@@ -17,6 +17,8 @@ class LetterNode(Node):
     def __init__(self, name):
         super(LetterNode, self).__init__()
         self.name = name
+        self.has_been_updated_to_false = False
+        self.has_been_updated_to_none_or_true = False
 
     def __repr__(self):
         return f"LetterNode({self.name})"
