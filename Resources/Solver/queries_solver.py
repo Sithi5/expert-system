@@ -200,7 +200,7 @@ class QueriesSolver:
                     if letter_node.has_been_updated_to_false is True:
                         self.logger.error(f"Conflict rules for {letter_node.name}")
                     else:
-                        has_been_updated_to_none_or_true = True
+                        letter_node.has_been_updated_to_none_or_true = True
                         current_state = ret
             letter_node.state = current_state
             if len(self.currently_solving_letters_node) == 1 or current_state is True:
