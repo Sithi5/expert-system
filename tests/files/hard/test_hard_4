@@ -3,15 +3,4 @@ A + B <=> C | D
 #C | D => A + B
 =D
 ?ABC
-# A is True\nB is True\nC is False
-
-##################################
-#              C
-#              |
-#              "|"-----D
-#               |
-#              <=>
-#               |
-#        B-----"+"-----A
-#
-###################################
+# A is True\nB is True\nC is Undetermined

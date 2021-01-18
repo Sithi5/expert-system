@@ -1,0 +1,8 @@
+A + B + C => E
+X => B + C
+X => A
+
+=X
+?E
+
+# E is True

@@ -1,0 +1,6 @@
+!B => C
+A => B
+=A
+?C
+
+# C is False

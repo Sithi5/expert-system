@@ -1,0 +1,9 @@
+A ^ B => C
+D ^ E => F
+G ^ H => I
+J ^ K => L
+
+=ABDH
+?CFIL
+
+# C is False\nF is True\nI is True\nL is False

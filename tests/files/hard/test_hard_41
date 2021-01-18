@@ -1,0 +1,11 @@
+((((((((((A)))))))))) => C
+A + !(B) => D
+(D | E) => W
+!(!(!C) ^ !(!F)) => G
+(((!E ^ (D + A + B)))) => F
+(E + ((!C | F)) + A) + B ^ (A + F) => Z
+
+=AB
+?CDWGFZ
+
+# C is True\nD is False\nW is False\nG is True\nF is True\nZ is True

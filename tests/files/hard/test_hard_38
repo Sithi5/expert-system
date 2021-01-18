@@ -1,0 +1,7 @@
+!A => !E
+X => !A + B
+
+=X
+?E
+
+# E is False
