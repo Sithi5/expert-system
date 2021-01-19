@@ -164,7 +164,6 @@ class Shell(cmd.Cmd):
 
     def do_load_file(self, arg):
         "do_load_file <fd> : Open fd parse by line and apply creation function for each line"
-        print(arg)
         with open(arg, "r") as file:
             f = file.readlines()
             for line in f:
@@ -194,21 +193,24 @@ class Shell(cmd.Cmd):
     def do_process(self, arg):
         "Solve with expert-system and keep the shell open"
         self.do_show_all(None)
-        try:
-            parser = Parser(None, True)
-            for it, line in enumerate(self.rules):
-                splited_line = re.split("=>|<=>", line)
-                rule = Rule(line, splited_line, it, True)
-                parser.rules.append(rule)
-            parser.facts = list(self.facts.keys())
-            parser.queries = list(self.queries.keys())
-            tree = Tree(True, parser.rules)
-            tree.create_tree(parser.rules, parser.facts, parser.queries)
-            solver = QueriesSolver(vb=True, queries=parser.queries, tree=tree)
-            solver.solve_queries()
-            print("\n".join(solver.result))
-        except Exception:
-            pass
+        if len(self.queries) > 0:
+            try:
+                parser = Parser(None, True)
+                for it, line in enumerate(self.rules):
+                    splited_line = re.split("=>|<=>", line)
+                    rule = Rule(line, splited_line, it, True)
+                    parser.rules.append(rule)
+                parser.facts = list(self.facts.keys())
+                parser.queries = list(self.queries.keys())
+                tree = Tree(True, parser.rules)
+                tree.create_tree(parser.rules, parser.facts, parser.queries)
+                solver = QueriesSolver(vb=True, queries=parser.queries, tree=tree)
+                solver.solve_queries()
+                print("\n".join(solver.result))
+            except Exception:
+                pass
+        else :
+            print("No queries found")
 
     def do_end(self, arg):
         "Close the shell window, and launch expert-system"
