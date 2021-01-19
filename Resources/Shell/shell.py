@@ -167,11 +167,13 @@ class Shell(cmd.Cmd):
         with open(arg, "r") as file:
             f = file.readlines()
             for line in f:
-                print(line)
+                print(line, end="")
                 if line[0] == "?":
-                    self.do_add_querie(line)
-                if line[0] == "=":
-                    self.do_add_fact(line)
+                    self.do_add_querie(line[1:-1])
+                elif line[0] == "=":
+                    self.do_add_fact(line[1:-1])
+                elif line[0] == "\n" or line[0] == "#":
+                    continue
                 else:
                     self.do_add_rule(line)
 
