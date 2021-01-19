@@ -163,21 +163,25 @@ class Shell(cmd.Cmd):
             print("There is no queries to be shown")
 
     def do_load_file(self, arg):
+        "do_load_file <fd> : Open fd parse by line and apply creation function for each line"
         print(arg)
         with open(arg, "r") as file:
             f = file.readlines()
             for line in f:
-                print(line, end="")
+                if len(line) > 1:
+                    line = line.replace("\n","")
                 if line[0] == "?":
-                    self.do_add_querie(line[1:-1])
+                    self.do_add_querie(line[1:])
                 elif line[0] == "=":
-                    self.do_add_fact(line[1:-1])
+                    self.do_add_fact(line[1:])
                 elif line[0] == "\n" or line[0] == "#":
                     continue
                 else:
                     self.do_add_rule(line)
+            self.do_show_all(None)
 
     def do_save_file(self, arg):
+        "do_save_file <fd> : save the generated rules/facts/queries into specified fd"
         with open(arg, "w") as file:
             rules = "\n".join(self.rules)
             facts = "=" + "".join(list(self.facts))
