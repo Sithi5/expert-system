@@ -76,7 +76,9 @@ class Shell(cmd.Cmd):
         try:
             self.rules.pop(int(arg))
         except Exception:
-            if len(self.rules) > 0:
+            if len(self.rules) == 1:
+                print(f"Need to be {len(self.rules) - 1}{END}")
+            elif len(self.rules) > 1:
                 print(
                     f"Need to be an {GREEN}int{END} in between {YELLOW}0{END} and {YELLOW}{len(self.rules) - 1}{END}"
                 )
@@ -169,7 +171,7 @@ class Shell(cmd.Cmd):
                 f = file.readlines()
                 for line in f:
                     if len(line) > 1:
-                        line = line.replace("\n","")
+                        line = line.replace("\n", "")
                     if line[0] == "?":
                         self.do_add_querie(line[1:])
                     elif line[0] == "=":
@@ -197,7 +199,7 @@ class Shell(cmd.Cmd):
         "Solve with expert-system and keep the shell open"
         if len(self.queries) > 0:
             try:
-                self.do_showF_all(None)
+                self.do_show_all(None)
                 parser = Parser(None, True)
                 for it, line in enumerate(self.rules):
                     splited_line = re.split("=>|<=>", line)
@@ -212,7 +214,7 @@ class Shell(cmd.Cmd):
                 print("\n".join(solver.result))
             except Exception:
                 pass
-        else :
+        else:
             print("No queries found")
 
     def do_end(self, arg):
