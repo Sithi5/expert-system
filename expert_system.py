@@ -9,22 +9,6 @@ from Resources.Solver.queries_solver import QueriesSolver
 from Resources.Shell.shell import Shell
 
 
-def parsing_shell(vb):
-    logger = Logger("Main", vb)
-    shell = Shell(completekey="tab")
-    shell.cmdloop()
-    parser = Parser(None, vb)
-    for it, line in enumerate(shell.rules):
-        splited_line = re.split("=>|<=>", line)
-        rule = Rule(line, splited_line, it, vb)
-        parser.rules.append(rule)
-    parser.facts = list(shell.facts.keys())
-    parser.queries = list(shell.queries.keys())
-    if len(parser.queries) == 0:
-        logger.error("No queries")
-    return parser
-
-
 def parsing(file, vb):
     parser = Parser(file.readlines(), vb)
     parser.parsing()
@@ -60,17 +44,17 @@ if __name__ == "__main__":
     file.add_argument("-vb", "--verbose", action="store_true", help="Enable verbose")
     file.add_argument("filename", type=argparse.FileType("r"), help="The file containing rules")
     shell = subparsers.add_parser("shell")
-    shell.add_argument("-vb", "--verbose", action="store_true", help="Enable verbose")
     shell.set_defaults(which="shell")
     args = parser.parse_args()
     if len(vars(args)) == 0:
         exit("expert_system.py: error: you need too choose between {file,shell}")
     try:
-        parser = (
-            parsing_shell(args.verbose)
-            if args.which == "shell"
-            else parsing(args.filename, args.verbose)
-        )
+        if args.which == "shell":
+            shell = Shell(completekey="tab")
+            shell.cmdloop()
+            exit()
+        else:
+            parser = parsing(file=args.filename, vb=args.verbose)
         print(tree_solver(parser=parser, vb=args.verbose))
-    except Exception as error:
+    except Exception:
         pass

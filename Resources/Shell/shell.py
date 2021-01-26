@@ -164,20 +164,23 @@ class Shell(cmd.Cmd):
 
     def do_load_file(self, arg):
         "do_load_file <fd> : Open fd parse by line and apply creation function for each line"
-        with open(arg, "r") as file:
-            f = file.readlines()
-            for line in f:
-                if len(line) > 1:
-                    line = line.replace("\n","")
-                if line[0] == "?":
-                    self.do_add_querie(line[1:])
-                elif line[0] == "=":
-                    self.do_add_fact(line[1:])
-                elif line[0] == "\n" or line[0] == "#":
-                    continue
-                else:
-                    self.do_add_rule(line)
-            self.do_show_all(None)
+        try:
+            with open(arg, "r") as file:
+                f = file.readlines()
+                for line in f:
+                    if len(line) > 1:
+                        line = line.replace("\n","")
+                    if line[0] == "?":
+                        self.do_add_querie(line[1:])
+                    elif line[0] == "=":
+                        self.do_add_fact(line[1:])
+                    elif line[0] == "\n" or line[0] == "#":
+                        continue
+                    else:
+                        self.do_add_rule(line)
+                self.do_show_all(None)
+        except Exception:
+            print(f"Can't load {arg}")
 
     def do_save_file(self, arg):
         "do_save_file <fd> : save the generated rules/facts/queries into specified fd"
@@ -192,9 +195,9 @@ class Shell(cmd.Cmd):
 
     def do_process(self, arg):
         "Solve with expert-system and keep the shell open"
-        self.do_show_all(None)
         if len(self.queries) > 0:
             try:
+                self.do_showF_all(None)
                 parser = Parser(None, True)
                 for it, line in enumerate(self.rules):
                     splited_line = re.split("=>|<=>", line)
@@ -214,10 +217,8 @@ class Shell(cmd.Cmd):
 
     def do_end(self, arg):
         "Close the shell window, and launch expert-system"
-        print(f"Your file :\n{'-' * len(self.rules[self.finx_max(self.rules)])}")
-        self.do_show_all(None)
-        print(f"{'-' * len(self.rules[self.finx_max(self.rules)])}")
-        return True
+        self.do_process(None)
+        exit()
 
     def do_exit(self, arg):
         "Close the shell window, and exit"
