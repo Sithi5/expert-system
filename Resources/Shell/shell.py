@@ -76,7 +76,9 @@ class Shell(cmd.Cmd):
         try:
             self.rules.pop(int(arg))
         except Exception:
-            if len(self.rules) > 0:
+            if len(self.rules) == 1:
+                print(f"Need to be {len(self.rules) - 1}{END}")
+            elif len(self.rules) > 1:
                 print(
                     f"Need to be an {GREEN}int{END} in between {YELLOW}0{END} and {YELLOW}{len(self.rules) - 1}{END}"
                 )
@@ -163,19 +165,27 @@ class Shell(cmd.Cmd):
             print("There is no queries to be shown")
 
     def do_load_file(self, arg):
-        print(arg)
-        with open(arg, "r") as file:
-            f = file.readlines()
-            for line in f:
-                print(line)
-                if line[0] == "?":
-                    self.do_add_querie(line)
-                if line[0] == "=":
-                    self.do_add_fact(line)
-                else:
-                    self.do_add_rule(line)
+        "do_load_file <fd> : Open fd parse by line and apply creation function for each line"
+        try:
+            with open(arg, "r") as file:
+                f = file.readlines()
+                for line in f:
+                    if len(line) > 1:
+                        line = line.replace("\n", "")
+                    if line[0] == "?":
+                        self.do_add_querie(line[1:])
+                    elif line[0] == "=":
+                        self.do_add_fact(line[1:])
+                    elif line[0] == "\n" or line[0] == "#":
+                        continue
+                    else:
+                        self.do_add_rule(line)
+                self.do_show_all(None)
+        except Exception:
+            print(f"Can't load {arg}")
 
     def do_save_file(self, arg):
+        "do_save_file <fd> : save the generated rules/facts/queries into specified fd"
         with open(arg, "w") as file:
             rules = "\n".join(self.rules)
             facts = "=" + "".join(list(self.facts))
@@ -187,29 +197,30 @@ class Shell(cmd.Cmd):
 
     def do_process(self, arg):
         "Solve with expert-system and keep the shell open"
-        self.do_show_all(None)
-        try:
-            parser = Parser(None, True)
-            for it, line in enumerate(self.rules):
-                splited_line = re.split("=>|<=>", line)
-                rule = Rule(line, splited_line, it, True)
-                parser.rules.append(rule)
-            parser.facts = list(self.facts.keys())
-            parser.queries = list(self.queries.keys())
-            tree = Tree(True, parser.rules)
-            tree.create_tree(parser.rules, parser.facts, parser.queries)
-            solver = QueriesSolver(vb=True, queries=parser.queries, tree=tree)
-            solver.solve_queries()
-            print("\n".join(solver.result))
-        except Exception:
-            pass
+        if len(self.queries) > 0:
+            try:
+                self.do_show_all(None)
+                parser = Parser(None, True)
+                for it, line in enumerate(self.rules):
+                    splited_line = re.split("=>|<=>", line)
+                    rule = Rule(line, splited_line, it, True)
+                    parser.rules.append(rule)
+                parser.facts = list(self.facts.keys())
+                parser.queries = list(self.queries.keys())
+                tree = Tree(True, parser.rules)
+                tree.create_tree(parser.rules, parser.facts, parser.queries)
+                solver = QueriesSolver(vb=True, queries=parser.queries, tree=tree)
+                solver.solve_queries()
+                print("\n".join(solver.result))
+            except Exception:
+                pass
+        else:
+            print("No queries found")
 
     def do_end(self, arg):
         "Close the shell window, and launch expert-system"
-        print(f"Your file :\n{'-' * len(self.rules[self.finx_max(self.rules)])}")
-        self.do_show_all(None)
-        print(f"{'-' * len(self.rules[self.finx_max(self.rules)])}")
-        return True
+        self.do_process(None)
+        exit()
 
     def do_exit(self, arg):
         "Close the shell window, and exit"
