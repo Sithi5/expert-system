@@ -32,13 +32,11 @@ expression.
 to check the same query against a different input without changing the source file,
 or to clarify an undeterminable fact, for example from an OR conclusion without
 further information.
-
 - Reasoning visualisation : For a given query, provide some feedback to explain the
 answer to the user, for example "We know that A is true. Since we know A | B =>
 C, then C is true", or any other type of visualization you like. Even better, output
 everything in formal logic notation, and go show Thor : If he likes it, you’ll win a
 beer.
-
 - "OR" and "XOR" in conclusions. For example, "If A then B or C"
 - Biconditional rules. For example, "A and B if-and-only-if D". In case it’s unclear, this means not only "If A and B then D" but also "If D then A and B"
 - Whatever other interesting bonus you want, as long as it’s coherent with the rest
